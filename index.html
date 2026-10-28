@@ -583,49 +583,64 @@ function estDaYun(s,gender,birthYear){
 // ===== 도파민 지수 =====
 function calcDopa(s,g,gods,birthYear){
   const ds=s.day.s,db=s.day.b,mb=s.month.b,yb=s.year.b;
-  // 2027 세운: 정미(丁未) stem=3, branch=7
-  const seS=3,seB=7;
-  // 대운 추정
+  const seS=3,seB=7; // 2027 정미(丁未)
   const dy=estDaYun(s,g,birthYear);
-  let score=40;
-  // === 가산 (자극·변화 추구 ↑) ===
   const yeokma=[2,8,5,11],dohwa=[0,6,3,9];
-  // 역마 in 세운/대운, 원국과 작용
+  const dist=eDist(s);
+  const allNB=[s.year.b,s.month.b,s.day.b];if(s.hour.b>=0)allNB.push(s.hour.b);
+  const peach=PM[db];
+
+  let score=30; // 기본점수 (원국 성향으로 올라감)
+
+  // ====== 원국 기반 도파민 성향 (태어날 때부터 가진 자극 추구 기질) ======
+  if(allNB.includes(peach))score+=10;                    // 원국에 도화살 보유 → 매력+자극 추구 체질
+  if(allNB.some(b=>yeokma.includes(b)))score+=6;         // 원국에 역마 보유 → 변화 추구 체질
+  if(gods['식신']+gods['상관']>2)score+=7;               // 식상 과다 → 표현/자극 욕구 강함
+  if(gods['편관']>1)score+=5;                            // 편관 → 외부 자극에 반응하는 구조
+  if(gods['상관']>1)score+=5;                            // 상관 → 반항/변화 에너지
+  if(gods['편재']>1)score+=4;                            // 편재 → 새로운 것에 눈이 가는 구조
+  if(dist[1]>3)score+=4;                                 // 화(火) 과다 → 열정적 기질
+  if(gods['편인']+gods['정인']>2.5)score-=5;             // 인성 과다 → 안정 추구 체질
+  if(gods['비견']+gods['겁재']>3)score-=3;               // 비겁 과다 → 자기 세계에 머무름
+
+  // ====== 2027 세운 영향 ======
+  const seSG=tg(ds,seS),seZG=tg(ds,HS[seB][0]);
+  // 세운 십성
+  if(seSG==='편관'||seSG==='상관')score+=10;
+  if(seZG==='편관'||seZG==='상관')score+=8;
+  if(seSG==='편재')score+=7;if(seZG==='편재')score+=5;
+  // 세운이 원국 도화를 찔러오는지
+  if(seB===peach)score+=12;
+  if(allNB.some(b=>PM[b]===seB))score+=6;               // 세운 지지가 원국 어딘가의 도화
+  // 역마 in 세운/대운
   if(yeokma.includes(seB)&&(yeokma.includes(yb)||yeokma.includes(db)))score+=12;
   if(yeokma.includes(dy.b)&&(yeokma.includes(yb)||yeokma.includes(db)))score+=8;
   // 도화 in 세운/대운
   if(dohwa.includes(seB))score+=8;
   if(dohwa.includes(dy.b))score+=6;
-  // 세운 천간/지지 십성 체크
-  const seSG=tg(ds,seS),seZG=tg(ds,HS[seB][0]);
-  if(seSG==='편관'||seSG==='상관')score+=10;
-  if(seZG==='편관'||seZG==='상관')score+=10;
-  if(seSG==='편재')score+=7;if(seZG==='편재')score+=5;
-  // 대운 천간/지지 십성
-  const dySG=tg(ds,dy.s),dyZG=tg(ds,HS[dy.b][0]);
-  if(dySG==='편관'||dySG==='상관')score+=7;
-  if(dyZG==='편관'||dyZG==='상관')score+=7;
-  if(dySG==='편재')score+=5;
   // 세운 지지와 일지/월지 충
   let clCnt=0;if(isClash(seB,db))clCnt++;if(isClash(seB,mb))clCnt++;
   if(clCnt>=2)score+=18;else if(clCnt===1)score+=12;
-  // 화/목 과다
-  const dist=eDist(s);
-  if(dist[1]+(SE[seS]===1?1:0)+(BE[seB]===1?1:0)>=4)score+=6;
-  if(dist[0]+(SE[seS]===0?1:0)+(BE[seB]===0?1:0)>=4)score+=6;
-  // 식상 3+ and 세운에서 또
+  // 화/목 과다 (원국+세운)
+  if(dist[1]+(SE[seS]===1?1:0)+(BE[seB]===1?1:0)>=4)score+=5;
+  if(dist[0]+(SE[seS]===0?1:0)+(BE[seB]===0?1:0)>=4)score+=5;
+  // 식상 누적
   if(gods['식신']+gods['상관']>=3&&(seSG==='식신'||seSG==='상관'))score+=8;
-  // === 감산 (안정 추구 ↑) ===
-  if(seSG==='정인')score-=8;if(seSG==='정관')score-=8;
-  if(seZG==='정인')score-=6;if(seZG==='정관')score-=6;
-  if(dySG==='정인')score-=5;if(dySG==='정관')score-=5;
-  // 세운 지지와 원국 합
-  const allB=[s.year.b,s.month.b,s.day.b];if(s.hour.b>=0)allB.push(s.hour.b);
-  if(allB.some(b=>isHarm(seB,b)))score-=6;
-  // 토 3개 이상
-  if(dist[2]+(SE[seS]===2?1:0)+(BE[seB]===2?1:0)>=3)score-=5;
-  // 인성 강하고 세운에서도 인성
-  if(gods['편인']+gods['정인']>=3&&(seSG==='편인'||seSG==='정인'))score-=10;
+
+  // ====== 대운 영향 ======
+  const dySG=tg(ds,dy.s),dyZG=tg(ds,HS[dy.b][0]);
+  if(dySG==='편관'||dySG==='상관')score+=6;
+  if(dyZG==='편관'||dyZG==='상관')score+=6;
+  if(dySG==='편재')score+=4;
+
+  // ====== 감산 (안정 에너지) ======
+  if(seSG==='정인')score-=7;if(seSG==='정관')score-=7;
+  if(seZG==='정인')score-=5;if(seZG==='정관')score-=5;
+  if(dySG==='정인')score-=4;if(dySG==='정관')score-=4;
+  if(allNB.some(b=>isHarm(seB,b)))score-=4;             // 합 → 안정
+  if(dist[2]+(SE[seS]===2?1:0)+(BE[seB]===2?1:0)>=3)score-=3; // 토 균형
+  if(gods['편인']+gods['정인']>=3&&(seSG==='편인'||seSG==='정인'))score-=8;
+
   return Math.max(0,Math.min(100,score));
 }
 function dopaLevel(v){
