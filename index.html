@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>사주로 보는 나의 연애 운명</title>
+<title>나랑 어울리는 치이카와 & 도파민 지수 확인</title>
+<meta property="og:title" content="나랑 어울리는 치이카와 & 도파민 지수 확인">
+<meta property="og:description" content="생년월일로 알아보는 나의 치이카와 캐릭터, 연애 도파민 지수, 궁합까지!">
+<meta property="og:type" content="website">
+<meta name="description" content="생년월일로 알아보는 나의 치이카와 캐릭터, 연애 도파민 지수, 궁합까지!">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Malgun Gothic',sans-serif;background:linear-gradient(135deg,#fef9f4 0%,#fdf2e9 50%,#fce8d8 100%);min-height:100vh;color:#2d2d2d;line-height:1.7}
@@ -159,7 +163,7 @@ input:focus,select:focus{outline:none;border-color:#d4956b}
 </head>
 <body>
 <div class="container">
-<h1>사주로 보는 나의 연애 운명</h1>
+<h1>나랑 어울리는 치이카와 & 도파민 지수</h1>
 <p class="subtitle">양력 생년월일을 입력하면 당신의 연애 운명을 분석합니다</p>
 <div class="tab-bar">
 <button class="tab-btn active" onclick="switchTab('individual')">개인 분석</button>
@@ -1194,7 +1198,7 @@ function doShare(url) {
   // 모바일에서만 네이티브 공유 시도, 데스크톱은 항상 클립보드
   const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
   if (isMobile && navigator.share) {
-    navigator.share({title:'사주 연애 운명 분석', url}).catch(()=>{});
+    navigator.share({title:'나랑 어울리는 치이카와 & 도파민 지수 확인', text:'내 치이카와 캐릭터랑 도파민 지수 확인해봐!', url}).catch(()=>{});
     return;
   }
   // 클립보드 복사
