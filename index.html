@@ -590,18 +590,19 @@ function calcDopa(s,g,gods,birthYear){
   const allNB=[s.year.b,s.month.b,s.day.b];if(s.hour.b>=0)allNB.push(s.hour.b);
   const peach=PM[db];
 
-  let score=30; // 기본점수 (원국 성향으로 올라감)
+  let score=42; // 기본점수 (누구나 어느 정도의 자극 욕구는 있다)
 
   // ====== 원국 기반 도파민 성향 (태어날 때부터 가진 자극 추구 기질) ======
-  if(allNB.includes(peach))score+=10;                    // 원국에 도화살 보유 → 매력+자극 추구 체질
-  if(allNB.some(b=>yeokma.includes(b)))score+=6;         // 원국에 역마 보유 → 변화 추구 체질
-  if(gods['식신']+gods['상관']>2)score+=7;               // 식상 과다 → 표현/자극 욕구 강함
-  if(gods['편관']>1)score+=5;                            // 편관 → 외부 자극에 반응하는 구조
-  if(gods['상관']>1)score+=5;                            // 상관 → 반항/변화 에너지
-  if(gods['편재']>1)score+=4;                            // 편재 → 새로운 것에 눈이 가는 구조
-  if(dist[1]>3)score+=4;                                 // 화(火) 과다 → 열정적 기질
-  if(gods['편인']+gods['정인']>2.5)score-=5;             // 인성 과다 → 안정 추구 체질
-  if(gods['비견']+gods['겁재']>3)score-=3;               // 비겁 과다 → 자기 세계에 머무름
+  if(allNB.includes(peach))score+=12;                    // 원국에 도화살 보유 → 매력+자극 추구 체질
+  if(allNB.some(b=>yeokma.includes(b)))score+=8;         // 원국에 역마 보유 → 변화 추구 체질
+  if(gods['식신']+gods['상관']>1.5)score+=8;             // 식상 → 표현/자극 욕구
+  if(gods['편관']>0.8)score+=6;                          // 편관 → 외부 자극에 반응
+  if(gods['상관']>0.8)score+=6;                          // 상관 → 반항/변화 에너지
+  if(gods['편재']>0.8)score+=5;                          // 편재 → 새것에 눈이 감
+  if(dist[1]>2)score+=5;                                 // 화(火) → 열정적 기질
+  if(dist[0]>2)score+=3;                                 // 목(木) → 성장/변화 욕구
+  if(gods['편인']+gods['정인']>3)score-=4;               // 인성 과다 → 안정 추구 (문턱 높임)
+  if(gods['비견']+gods['겁재']>3.5)score-=3;             // 비겁 과다 → 자기 세계에 머무름
 
   // ====== 2027 세운 영향 ======
   const seSG=tg(ds,seS),seZG=tg(ds,HS[seB][0]);
