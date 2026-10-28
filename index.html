@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사주로 보는 나의 연애 운명</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Malgun Gothic',sans-serif;background:linear-gradient(135deg,#fef9f4 0%,#fdf2e9 50%,#fce8d8 100%);min-height:100vh;color:#2d2d2d;line-height:1.7}
+.container{max-width:640px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:28px;text-align:center;margin-bottom:4px;letter-spacing:-0.5px}
+.subtitle{text-align:center;color:#888;font-size:14px;margin-bottom:32px}
+.card{background:#fff;border-radius:16px;padding:24px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,0.06)}
+.card h2{font-size:18px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.card h3{font-size:15px;margin:16px 0 8px;color:#555}
+.tab-bar{display:flex;gap:4px;margin-bottom:20px;background:#f0e8e0;border-radius:12px;padding:4px}
+.tab-btn{flex:1;padding:12px;border:none;background:transparent;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;color:#999;transition:all .2s}
+.tab-btn.active{background:#fff;color:#d4956b;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:13px;font-weight:600;color:#666;margin-bottom:6px}
+.form-row{display:flex;gap:10px}
+.form-row .form-group{flex:1}
+input[type="number"],input[type="time"],select{width:100%;padding:12px 14px;border:1.5px solid #e0d6cc;border-radius:10px;font-size:15px;background:#faf7f4;transition:border-color .2s}
+input:focus,select:focus{outline:none;border-color:#d4956b}
+.time-row{display:flex;align-items:center;gap:12px}
+.time-row input[type="time"]{flex:1}
+.time-row label{font-size:13px;color:#888;white-space:nowrap;display:flex;align-items:center;gap:4px;cursor:pointer}
+.time-row input[type="checkbox"]{accent-color:#d4956b}
+.gender-group{display:flex;gap:12px;margin-top:6px}
+.gender-btn{flex:1;padding:12px;border:1.5px solid #e0d6cc;border-radius:10px;background:#faf7f4;font-size:15px;cursor:pointer;text-align:center;transition:all .2s}
+.gender-btn.active{border-color:#d4956b;background:#d4956b;color:#fff}
+.analyze-btn{width:100%;padding:16px;background:linear-gradient(135deg,#d4956b,#c9825a);color:#fff;border:none;border-radius:12px;font-size:17px;font-weight:700;cursor:pointer;transition:transform .15s,box-shadow .15s;margin-top:8px}
+.analyze-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(212,149,107,0.4)}
+.person-label{font-size:14px;font-weight:700;color:#d4956b;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #f0e8e0}
+#result,#compat-result{display:none}
+.el-wood{background:#6dbe6d}.el-fire{background:#e87c7c}.el-earth{background:#d4b06a}.el-metal{background:#a0a0b0}.el-water{background:#6da8d4}
+.element-bar{display:flex;gap:4px;margin:12px 0}
+.element-bar .el{flex:1;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff}
+.pillar-box{display:flex;justify-content:center;gap:12px;margin:16px 0}
+.pillar{text-align:center;width:72px}
+.pillar .label{font-size:11px;color:#999;margin-bottom:4px}
+.pillar .top,.pillar .bottom{padding:10px 0;border-radius:8px;font-size:13px;font-weight:600}
+.pillar .top{background:#f5ebe3;margin-bottom:2px}
+.pillar .bottom{background:#e8ddd3}
+.score-item{margin-bottom:18px}
+.score-header{display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px}
+.score-header .label{font-weight:600}
+.score-header .value{color:#d4956b;font-weight:700}
+.score-bar{height:10px;background:#f0e8e0;border-radius:5px;overflow:hidden}
+.score-fill{height:100%;border-radius:5px;transition:width 1s ease}
+.score-career .score-fill{background:linear-gradient(90deg,#6dbe6d,#4da64d)}
+.score-wealth .score-fill{background:linear-gradient(90deg,#e8b86d,#d4a04a)}
+.score-romance .score-fill{background:linear-gradient(90deg,#e87c9a,#d4607a)}
+.score-health .score-fill{background:linear-gradient(90deg,#6da8d4,#4d8cc0)}
+.score-desc{font-size:13px;color:#777;margin-top:6px;line-height:1.6}
+.chiikawa-box{text-align:center;padding:20px}
+.chiikawa-img{width:120px;height:120px;object-fit:contain;margin-bottom:8px}
+.chiikawa-name{font-size:20px;font-weight:700;margin-bottom:4px}
+.chiikawa-desc{font-size:14px;color:#777}
+.sunae-box{text-align:center;padding:20px}
+.sunae-score{font-size:56px;font-weight:800;background:linear-gradient(135deg,#e87c9a,#d4607a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sunae-label{font-size:14px;color:#888;margin-top:4px}
+.sunae-desc{font-size:14px;color:#555;margin-top:12px;line-height:1.8}
+.conflict-item{padding:12px 16px;background:#faf7f4;border-radius:10px;margin-bottom:8px;border-left:3px solid #e87c7c}
+.conflict-num{font-weight:700;color:#e87c7c;margin-right:6px}
+.solution-item{padding:10px 16px;background:#f0f8f0;border-radius:10px;margin-bottom:6px;border-left:3px solid #6dbe6d;font-size:14px}
+.timing-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.timing-card{padding:14px;border-radius:10px;text-align:center}
+.timing-card.meet{background:#fff0f5;border:1px solid #f5d0dc}
+.timing-card.decide{background:#f0f0ff;border:1px solid #d0d0f5}
+.timing-year{font-size:22px;font-weight:700;margin-bottom:2px}
+.timing-age{font-size:12px;color:#999}
+.timing-reason{font-size:12px;color:#666;margin-top:4px}
+.monthly-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.month-card{padding:12px 8px;border-radius:10px;text-align:center;border:1px solid #f0e8e0}
+.month-card.hot{background:#fff0f0;border-color:#f5d0d0}
+.month-card.warm{background:#fff8f0;border-color:#f5e0cc}
+.month-card.cool{background:#f0f8ff;border-color:#cce0f5}
+.month-card.cold{background:#f5f5f5;border-color:#e0e0e0}
+.month-num{font-size:13px;font-weight:700;margin-bottom:4px}
+.month-hearts{font-size:14px;margin-bottom:4px}
+.month-desc{font-size:11px;color:#666;line-height:1.4}
+.timeline-chart{position:relative;height:200px;margin:20px 0 10px;display:flex;align-items:flex-end;gap:6px;padding-bottom:24px;border-bottom:1px solid #e0d6cc}
+.timeline-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.timeline-bar{width:100%;border-radius:6px 6px 0 0;transition:height 1s ease;min-height:4px}
+.timeline-bar.current{box-shadow:0 0 0 2px #d4956b}
+.timeline-value{font-size:10px;font-weight:700;color:#888}
+.timeline-label{font-size:10px;color:#999;position:absolute;bottom:-20px;white-space:nowrap}
+
+/* 도파민 5단계 */
+.dopa-meter{text-align:center;margin:20px 0}
+.dopa-value{font-size:52px;font-weight:800}
+.dopa-badge{display:inline-block;padding:6px 16px;border-radius:20px;font-size:14px;font-weight:700;color:#fff;margin-top:8px}
+.dopa-safe{background:#4da64d}.dopa-caution{background:#6da8d4}.dopa-alert{background:#e8b847}
+.dopa-danger{background:#e88747}.dopa-critical{background:#e8475c;animation:blink 1s ease infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.6}}
+
+/* 분석 섹션 */
+.analysis-text{font-size:14px;line-height:1.9;color:#444}
+.analysis-text strong{color:#d4956b}
+.highlight-box{background:#fef5ee;border-radius:10px;padding:14px 16px;margin:10px 0;font-size:14px;border-left:3px solid #d4956b}
+.warn-box{background:#fff5f5;border-radius:10px;padding:14px 16px;margin:10px 0;font-size:14px;border-left:3px solid #e87c7c}
+.info-box{background:#f0f5ff;border-radius:10px;padding:14px 16px;margin:10px 0;font-size:14px;border-left:3px solid #6da8d4}
+.tag-list{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.tag{padding:4px 12px;background:#fef0e6;border-radius:20px;font-size:12px;color:#c9825a;font-weight:600}
+.tag.blue{background:#e8f2fc;color:#5a8fc9}
+.tag.pink{background:#fce8ef;color:#c95a7a}
+.tag.green{background:#e8fce8;color:#5ac962}
+.sub-section{margin-top:24px;padding-top:20px;border-top:1px dashed #e8ddd3}
+.sub-section:first-child{margin-top:12px;padding-top:0;border-top:none}
+.sub-section h3{color:#c9825a;font-size:15px;font-weight:700;margin-bottom:10px;letter-spacing:-0.3px}
+
+/* 궁합 */
+.compat-score-box{text-align:center;padding:24px}
+.compat-score{font-size:64px;font-weight:800;background:linear-gradient(135deg,#e87c9a,#7cb5e8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.compat-grade{font-size:18px;font-weight:700;margin-top:4px}
+.compat-pair{display:flex;justify-content:center;align-items:center;gap:20px;margin:16px 0}
+.compat-person{text-align:center}
+.compat-person img{width:50px;height:50px;object-fit:contain}
+.compat-good{padding:10px 14px;background:#f0f8f0;border-radius:8px;margin-bottom:6px;font-size:14px;border-left:3px solid #6dbe6d}
+.compat-warn{padding:10px 14px;background:#fff8f0;border-radius:8px;margin-bottom:6px;font-size:14px;border-left:3px solid #e8b86d}
+
+.share-card{background:linear-gradient(135deg,#fef9f4,#fce8d8);border:2px solid #e8d5c4;border-radius:20px;padding:28px;text-align:center;overflow:hidden}
+.share-stats{display:flex;justify-content:center;gap:20px;margin:16px 0}
+.share-stat{text-align:center}
+.share-stat .num{font-size:24px;font-weight:800;color:#d4956b}
+.share-stat .lbl{font-size:11px;color:#999}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp .6s ease forwards;opacity:0}
+.fade-up:nth-child(n+2){animation-delay:calc((var(--i,0))*0.1s)}
+.loading{display:none;text-align:center;padding:60px 20px}
+.loading.show{display:block}
+.loading-text{font-size:16px;color:#b89a7d;animation:pulse 1.5s ease infinite}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+.hidden{display:none!important}
+.compat-dual{display:flex;gap:16px;margin:16px 0}
+.compat-dual .compat-col{flex:1;text-align:center;padding:20px 12px;border-radius:12px}
+.compat-col.love-col{background:#fff0f5;border:1px solid #f5d0dc}
+.compat-col.friend-col{background:#f0f5ff;border:1px solid #d0dcf5}
+.compat-col .col-icon{font-size:28px;margin-bottom:4px}
+.compat-col .col-score{font-size:40px;font-weight:800;margin:4px 0}
+.compat-col.love-col .col-score{color:#d4607a}
+.compat-col.friend-col .col-score{color:#5a7ac9}
+.compat-col .col-grade{font-size:13px;font-weight:600;color:#888}
+.tension-bar{display:flex;align-items:center;gap:12px;margin:16px 0;padding:16px;background:#faf7f4;border-radius:12px}
+.tension-person{text-align:center;flex:0 0 60px}
+.tension-person .tp-score{font-size:20px;font-weight:700}
+.tension-person .tp-label{font-size:11px;color:#999}
+.tension-mid{flex:1;text-align:center}
+.tension-diff{font-size:24px;font-weight:800;color:#e88747}
+.tension-desc{font-size:12px;color:#888;margin-top:4px}
+@media(max-width:480px){
+.container{padding:16px 12px 40px}h1{font-size:22px}.pillar-box{gap:8px}.pillar{width:60px}
+.timing-grid,.monthly-grid{grid-template-columns:repeat(3,1fr)}.timeline-chart{gap:3px}
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.6.12/lunar.js"></script>
+</head>
+<body>
+<div class="container">
+<h1>사주로 보는 나의 연애 운명</h1>
+<p class="subtitle">양력 생년월일을 입력하면 당신의 연애 운명을 분석합니다</p>
+<div class="tab-bar">
+<button class="tab-btn active" onclick="switchTab('individual')">개인 분석</button>
+<button class="tab-btn" onclick="switchTab('compat')">궁합 분석</button>
+</div>
+<div id="tab-individual">
+<div class="card" id="input-section">
+<div class="form-row">
+<div class="form-group"><label>출생년도</label><input type="number" id="year" placeholder="1995" min="1940" max="2010"></div>
+<div class="form-group"><label>월</label><select id="month"><option value="">선택</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select></div>
+<div class="form-group"><label>일</label><input type="number" id="day" placeholder="15" min="1" max="31"></div>
+</div>
+<div class="form-group"><label>출생 시간</label><div class="time-row"><input type="time" id="birthtime" value="12:00"><label><input type="checkbox" id="notime" onchange="document.getElementById('birthtime').disabled=this.checked"> 모름</label></div></div>
+<div class="form-group"><label>성별</label><div class="gender-group"><div class="gender-btn" data-gender="M" onclick="selG(this,'individual')">남성</div><div class="gender-btn" data-gender="F" onclick="selG(this,'individual')">여성</div></div></div>
+<button class="analyze-btn" onclick="analyze()">운명 분석하기</button>
+</div>
+<div class="loading" id="loading"><p class="loading-text">당신의 운명을 읽는 중...</p></div>
+<div id="result"></div>
+</div>
+<div id="tab-compat" class="hidden">
+<div class="card" id="compat-input">
+<div class="person-label">첫 번째 사람</div>
+<div class="form-row"><div class="form-group"><label>출생년도</label><input type="number" id="c1-year" placeholder="1995" min="1940" max="2010"></div><div class="form-group"><label>월</label><select id="c1-month"><option value="">선택</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select></div><div class="form-group"><label>일</label><input type="number" id="c1-day" placeholder="15" min="1" max="31"></div></div>
+<div class="form-group"><label>출생 시간</label><div class="time-row"><input type="time" id="c1-time" value="12:00"><label><input type="checkbox" id="c1-notime" onchange="document.getElementById('c1-time').disabled=this.checked"> 모름</label></div></div>
+<div class="form-group"><label>성별</label><div class="gender-group"><div class="gender-btn" data-gender="M" onclick="selG(this,'c1')">남성</div><div class="gender-btn" data-gender="F" onclick="selG(this,'c1')">여성</div></div></div>
+<div class="person-label" style="margin-top:24px">두 번째 사람</div>
+<div class="form-row"><div class="form-group"><label>출생년도</label><input type="number" id="c2-year" placeholder="1993" min="1940" max="2010"></div><div class="form-group"><label>월</label><select id="c2-month"><option value="">선택</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select></div><div class="form-group"><label>일</label><input type="number" id="c2-day" placeholder="20" min="1" max="31"></div></div>
+<div class="form-group"><label>출생 시간</label><div class="time-row"><input type="time" id="c2-time" value="12:00"><label><input type="checkbox" id="c2-notime" onchange="document.getElementById('c2-time').disabled=this.checked"> 모름</label></div></div>
+<div class="form-group"><label>성별</label><div class="gender-group"><div class="gender-btn" data-gender="M" onclick="selG(this,'c2')">남성</div><div class="gender-btn" data-gender="F" onclick="selG(this,'c2')">여성</div></div></div>
+<button class="analyze-btn" onclick="analyzeCompat()">궁합 분석하기</button>
+</div>
+<div class="loading" id="compat-loading"><p class="loading-text">두 사람의 인연을 읽는 중...</p></div>
+<div id="compat-result"></div>
+</div>
+</div>
+
+<script>
+// ===== 상수 =====
+const ST=['갑','을','병','정','무','기','경','신','임','계'],BR=['자','축','인','묘','진','사','오','미','신','유','술','해'];
+const EL=['나무','불','흙','쇠','물'],EC=['#6dbe6d','#e87c7c','#d4b06a','#a0a0b0','#6da8d4'],EE=['🌿','🔥','🏔️','⚔️','💧'];
+const SE=[0,0,1,1,2,2,3,3,4,4],BE=[4,2,0,0,2,1,1,2,3,3,2,4],SY=[1,0,1,0,1,0,1,0,1,0];
+const HS=[[9],[5,9,7],[0,2,4],[1],[4,1,9],[2,6,4],[3,5],[5,3,1],[6,8,4],[7],[4,7,3],[8,0]];
+const MB=[{m:2,d:4,b:2},{m:3,d:6,b:3},{m:4,d:5,b:4},{m:5,d:6,b:5},{m:6,d:6,b:6},{m:7,d:7,b:7},{m:8,d:8,b:8},{m:9,d:8,b:9},{m:10,d:8,b:10},{m:11,d:7,b:11},{m:12,d:7,b:0},{m:1,d:6,b:1}];
+const HP=[[0,1],[2,11],[3,10],[4,9],[5,8],[6,7]];
+const PM={2:3,6:3,10:3,11:0,3:0,7:0,5:6,9:6,1:6,8:9,0:9,4:9};
+const isClash=(a,b)=>((a-b+12)%12===6);
+const isHarm=(a,b)=>HP.some(p=>(p[0]===a&&p[1]===b)||(p[0]===b&&p[1]===a));
+
+// ===== 계산 =====
+function jdn(y,m,d){if(m<=2){y--;m+=12}const A=Math.floor(y/100);return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d+2-A+Math.floor(A/4)-1524.5}
+function t2h(t){if(!t)return-1;const h=parseInt(t.split(':')[0]);if(h===23||h===0)return 0;return Math.ceil(h/2)}
+function calcManual(Y,M,D,hb){
+let sy=Y,sm=M;if(M<2||(M===2&&D<4))sy--;
+const ys=((sy-4)%10+10)%10,yb=((sy-4)%12+12)%12;
+let mi=11,mbr=1;for(let i=MB.length-1;i>=0;i--){if(M>MB[i].m||(M===MB[i].m&&D>=MB[i].d)){mi=i;mbr=MB[i].b;break}}
+const ms=(((ys%5)*2+2)%10+mi)%10;
+const dd=Math.round(jdn(Y,M,D)-jdn(2000,1,7)),dc=((dd%60)+60)%60;
+const ds=dc%10,db=dc%12;
+let hs=-1,hbr=-1;if(hb>=0){hbr=hb;hs=((ds%5)*2+hbr)%10}
+return{year:{s:ys,b:yb},month:{s:ms,b:mbr},day:{s:ds,b:db},hour:{s:hs,b:hbr}};
+}
+
+// Chinese character to index mapping for library
+const G2I={'甲':0,'乙':1,'丙':2,'丁':3,'戊':4,'己':5,'庚':6,'辛':7,'壬':8,'癸':9};
+const Z2I={'子':0,'丑':1,'寅':2,'卯':3,'辰':4,'巳':5,'午':6,'未':7,'申':8,'酉':9,'戌':10,'亥':11};
+
+function calc(Y,M,D,actualHour){
+  if(typeof Solar!=='undefined'){
+    try{
+      const h=actualHour>=0?actualHour:12;
+      const sol=Solar.fromYmdHms(Y,M,D,h,0,0);
+      const ec=sol.getLunar().getEightChar();
+      const r={
+        year:{s:G2I[ec.getYearGan()],b:Z2I[ec.getYearZhi()]},
+        month:{s:G2I[ec.getMonthGan()],b:Z2I[ec.getMonthZhi()]},
+        day:{s:G2I[ec.getDayGan()],b:Z2I[ec.getDayZhi()]},
+        hour:actualHour>=0?{s:G2I[ec.getTimeGan()],b:Z2I[ec.getTimeZhi()]}:{s:-1,b:-1},
+        _ec:ec
+      };
+      if(r.year.s>=0&&r.day.s>=0) return r;
+    }catch(e){console.warn('Library calc failed:',e)}
+  }
+  const hb=actualHour<0?-1:(actualHour===23||actualHour===0?0:Math.ceil(actualHour/2));
+  return calcManual(Y,M,D,hb);
+}
+function tg(ds,os){const me=Math.floor(ds/2),ot=Math.floor(os/2),sp=(ds%2)===(os%2),d=((ot-me)%5+5)%5;return[sp?'비견':'겁재',sp?'식신':'상관',sp?'편재':'정재',sp?'편관':'정관',sp?'편인':'정인'][d]}
+function eDist(s){const d=[0,0,0,0,0];[s.year,s.month,s.day].concat(s.hour.s>=0?[s.hour]:[]).forEach(p=>{d[SE[p.s]]+=1.5;d[BE[p.b]]+=1;if(HS[p.b].length)d[SE[HS[p.b][0]]]+=0.5});return d}
+function gDist(s){const g={비견:0,겁재:0,식신:0,상관:0,편재:0,정재:0,편관:0,정관:0,편인:0,정인:0};const ds=s.day.s;
+[s.year,s.month].concat(s.hour.s>=0?[s.hour]:[]).forEach(p=>{g[tg(ds,p.s)]+=1.5;HS[p.b].forEach((h,i)=>g[tg(ds,h)]+=(i?0.3:0.8))});
+HS[s.day.b].forEach((h,i)=>g[tg(ds,h)]+=(i?0.3:0.8));return g}
+
+// ===== 치이카와 8캐릭터 → 10간 매핑 =====
+const CK=[
+{name:"하치와레",img:"Hachiware.webp",stem:0,
+ desc:"치이카와의 든든한 친구처럼, 밝고 긍정적인 에너지로 주변을 환하게 만드는 타입. 동굴 같은 자기만의 공간에서 충전하고, 다시 나와 세상을 밝힌다.",
+ love:"연애에서도 밝은 에너지로 상대를 웃게 만든다. 다만 심각한 대화를 피하려는 경향이 있어서, 가끔은 진지하게 속마음을 꺼내야 한다.",
+ tag:"#무한긍정 #든든한친구 #밝은에너지"},
+{name:"모몽가",img:"Momonga.webp",stem:1,
+ desc:"항상 귀여운 척하면서 원하는 걸 끌어내는 전략가. 졸라대는 건 기본, 분위기를 읽고 원하는 걸 얻어내는 능력이 천재적이다.",
+ love:"연애에서 자기도 모르게 상대를 조종하는 경향이 있다. 귀여움과 눈치로 원하는 걸 얻지만, 진심을 보여주는 순간이 관계를 진짜로 만든다.",
+ tag:"#귀여움전략가 #눈치100단 #졸라대기장인"},
+{name:"우사기",img:"Usagi.webp",stem:2,
+ desc:"'우라!' '야하!'를 외치며 세상에 자기 존재를 알리는 타입. 에너지가 넘치고 예측불가. 하고 싶은 대로 살아가는 자유인이다.",
+ love:"연애에서도 올인한다. 좋으면 전 세계에 소리지르고, 식으면 갑자기 조용해진다. 상대는 이 에너지에 적응해야 한다.",
+ tag:"#우라! #예측불가 #열정올인"},
+{name:"치이카와",img:"Chiikawa.webp",stem:3,
+ desc:"겉으로는 울보처럼 약해 보이지만, 속에는 누구보다 뜨거운 마음이 있다. 풀을 뽑으며 묵묵히 토벌에 나서는 모습 뒤에 강한 의지가 숨어있다.",
+ love:"연애에서 감정을 잘 드러내지 못한다. 좋아해도 울기만 하고, 표현은 서투르지만 행동으로 보여주는 타입.",
+ tag:"#겉순속뜨 #울보지만진심 #행동형사랑"},
+{name:"랏코",img:"Rakko.webp",stem:4,
+ desc:"토벌을 잘하고 강한, 모두가 동경하는 존재. 과묵하지만 동료를 위해 앞장서는 듬직함. 한번 맡으면 끝까지 해내는 책임감의 소유자.",
+ love:"연애에서도 묵직한 안정감을 준다. 화려한 표현은 없지만 위기 때 진가가 드러난다. 말보다 행동으로 사랑을 증명한다.",
+ tag:"#듬직한전사 #행동으로증명 #동경의존재"},
+{name:"쿠리만쥬",img:"Kurimanju.webp",stem:5,
+ desc:"겉모습은 귀엽지만 속은 의외로 깊다. 미식가답게 좋은 것을 알아보는 눈이 있고, 주변 사람을 세심하게 챙기는 따뜻한 존재.",
+ love:"'챙김'이 사랑의 언어다. 상대의 취향을 기억하고, 맛있는 걸 나누고, 편안한 일상을 만든다. 다만 그만큼의 보답을 기대하기도 한다.",
+ tag:"#겉귀속깊 #미식가의사랑 #챙김마스터"},
+{name:"시사",img:"Shisa.webp",stem:6,
+ desc:"라멘집 '로우'의 조수로서 맡은 바에 충실한 타입. 스승님을 향한 존경과 충성이 삶의 기둥이다. 원칙적이고 기준이 명확하다.",
+ love:"연애에서도 한번 정하면 흔들리지 않는다. 솔직하고 직설적이라 상대에게 상처를 줄 수 있지만, 그만큼 거짓이 없다.",
+ tag:"#원칙주의 #묵묵한충성 #직설화법"},
+{name:"카니",img:"Furuhonna.webp",stem:7,
+ desc:"헌책을 파는 독자적 세계의 소유자. 하늘다람쥐에게 받은 머리띠를 쓰고 자기만의 스타일을 고집한다. 취향과 기준이 확실하다.",
+ love:"연애에서도 눈이 높고 까다롭다. 쉽게 마음을 열지 않지만, 한번 인정한 사람에게는 놀라울 만큼 일관적이다.",
+ tag:"#세련된취향 #까다로운기준 #헌책방감성"},
+{name:"우사기",img:"Usagi.webp",stem:8,
+ desc:"'우라!'를 외치며 자유롭게 살아가는 우사기의 또 다른 면. 구속을 싫어하고 넓은 세상을 누빈다. 어디에도 소속되지 않는 자유인.",
+ love:"연애에서 자유를 가장 중시한다. 매력 넘치는 사교성으로 인기가 많지만, 한 사람에게 정착하는 건 쉽지 않다.",
+ tag:"#자유영혼 #인기만점 #구속불가"},
+{name:"치이카와",img:"Chiikawa.webp",stem:9,
+ desc:"풀을 뽑으며 열심히 살아가는 치이카와 그 자체. 순수하고 감성적이며, 겁이 많고 눈물이 많지만 용감해지려 노력하는 작고 소중한 존재.",
+ love:"상대에게 맞추려 하고, 속마음을 잘 표현 못 한다. 이상적인 사랑을 꿈꾸지만 현실과의 갭에 자주 상처받는다. 그 순수함이 최대 매력.",
+ tag:"#순수감성 #겁많은용기 #작고소중한"}
+];
+function getCK(ds){return CK.find(c=>c.stem===ds)||CK[0]}
+
+// ===== 점수 =====
+function calcScores(s,g,gods,dist){
+  const ds=s.day.s,db=s.day.b,myEl=SE[ds];
+  const self=gods['비견']+gods['겁재']+gods['편인']+gods['정인'];
+  const off=gods['편관']+gods['정관'],out=gods['식신']+gods['상관'],wth=gods['편재']+gods['정재'];
+  const ps=[s.year.b,s.month.b];if(s.hour.b>=0)ps.push(s.hour.b);
+  const dc=ps.some(b=>isClash(db,b)),dh=ps.some(b=>isHarm(db,b));
+  const pg=g==='F'?off:wth;
+
+  let career=50;if(off>1.5&&self>2)career+=20;else if(off>2.5)career+=10;if(out>1.5)career+=12;if(self>3)career+=8;if(self<1.5)career-=10;
+  let wealth=45;if(wth>1.5&&self>2)wealth+=22;else if(wth>1.5&&self<1.5)wealth+=5;if(wth<0.5)wealth-=5;if(out>1&&wth>1)wealth+=12;
+  let romance=50;if(pg>0.5&&pg<3)romance+=15;if(pg>3)romance-=5;if(pg<0.3)romance-=10;if(dc)romance-=12;if(dh)romance+=8;if(ps.includes(PM[db]))romance+=5;
+  let health=55;const mx=Math.max(...dist),mn=Math.min(...dist);if(mx-mn>4)health-=15;else if(mx-mn>3)health-=8;if(dist[1]>0&&dist[4]>0)health+=5;if(dc)health-=5;
+  return{career:cl(career),wealth:cl(wealth),romance:cl(romance),health:cl(health)};
+}
+function cl(v){return Math.max(20,Math.min(95,v))}
+
+function genSD(s,g,gods,dist){
+  const self=gods['비견']+gods['겁재']+gods['편인']+gods['정인'];
+  const off=gods['편관']+gods['정관'],out=gods['식신']+gods['상관'],wth=gods['편재']+gods['정재'];
+  const pg=g==='F'?off:wth;const ps=[s.year.b,s.month.b];if(s.hour.b>=0)ps.push(s.hour.b);
+  const dc=ps.some(b=>isClash(s.day.b,b));
+  const bp={0:"간, 근육, 눈",1:"심장, 혈액순환",2:"위장, 소화기, 피부",3:"폐, 호흡기",4:"신장, 방광, 뼈"};
+  const mxi=dist.indexOf(Math.max(...dist)),mni=dist.indexOf(Math.min(...dist));
+
+  let c=off>2&&self>2?"조직에서 빠르게 인정받는 구조다. 책임감이 강하고 윗사람에게 신임을 얻기 쉽다. 다만 과한 책임감이 번아웃으로 이어지기 쉬우니, 일을 위임하는 훈련이 필요하다. 승진은 빠르지만 몸이 따라가지 못하는 순간이 온다."
+    :out>2?"창의적 역량이 돋보인다. 기획, 콘텐츠, 예술, 마케팅 분야에서 두각을 나타내기 쉽고, 자유로운 환경에서 최고 성과를 낸다. 반대로 정해진 틀 안에서 반복 업무를 하면 빠르게 지친다. 자기 색깔을 살릴 수 있는 포지션을 찾는 것이 커리어의 핵심이다."
+    :self>3?"자기 사업이나 프리랜서가 맞을 수 있다. 남의 지시를 받으면 에너지가 꺾이고, 스스로 판단하고 실행할 때 능력이 극대화된다. 다만 혼자 모든 걸 하려는 성향 때문에 협업에서 마찰이 생길 수 있다. 믿고 맡길 줄 아는 게 성장의 열쇠다."
+    :self<1.5?"외부 환경에 따라 커리어가 흔들리기 쉬운 구조다. 실력은 있지만 결정적 순간에 밀려나는 경향이 있다. 든든한 멘토나 조직의 백업이 있으면 크게 성장할 수 있고, 전문 자격증이나 기술을 확보해 두면 안정감이 올라간다."
+    :"안정적 환경에서 꾸준히 성과를 내는 타입이다. 화려한 도약보다는 확실한 길에서 전문성을 쌓아가는 것이 맞다. 큰 리스크를 감수하는 것보다 한 분야를 깊게 파고 들어가면 30대 중반 이후 진가가 드러난다.";
+
+  let w=wth>2&&self>2?"재물을 만들 능력도, 감당할 그릇도 있다. 돈이 돌아가는 구조를 읽는 감이 있어서, 투자나 사업에서 성과를 내기 쉽다. 다만 쓸 때도 크게 쓰는 편이라, 벌어도 남지 않는 시기가 반복된다. 수입의 30%는 반드시 자동 저축으로 묶어둘 것."
+    :wth>2&&self<1.5?"돈이 들어오긴 하는데 유지가 안 되는 구조다. 벌어도 빠져나가고, 투자하면 타이밍이 안 맞는 패턴이 있다. 큰 돈을 굴리기보다 지출 관리에 집중하는 것이 현실적이다. 고정 수입을 확보하고, 충동 소비를 줄이는 것만으로 체감 재물운이 올라간다."
+    :out>1&&wth>1?"능력으로 돈을 만드는 구조다. 전문성이나 기술, 콘텐츠를 재물로 바꿀 수 있는 잠재력이 있다. 자격증, 스킬업이 곧 재테크인 타입이다. 30대 이후 전문 분야가 자리 잡으면 수입이 안정적으로 올라간다."
+    :wth<0.5?"돈에 대한 욕구가 크지 않거나, 재물보다 명예나 안정을 추구하는 구조다. 나쁜 건 아니지만, 경제적 기반을 의식적으로 다져야 한다. 재테크에 무관심하면 나중에 원하는 선택지가 줄어든다. 최소한의 투자 습관은 만들어 둘 것."
+    :"재물운은 평균적이다. 큰 횡재는 어렵지만 꾸준히 모으면 안정적 자산을 만들 수 있다. 무리한 투자보다 적금과 소액 분산투자가 맞는 구조다. 40대 이후에 경제적 안정감이 오는 편이라, 그 전까지는 기반을 다지는 시기라 생각하면 된다.";
+
+  let r=pg>0.5&&pg<2&&!dc?"배우자 인연이 뚜렷하고 안정적이다. 좋은 사람을 만날 확률이 높고, 만나면 관계 유지도 수월한 편이다. 다만 '좋은 인연이 올 거야'라는 안일함이 오히려 적극성을 떨어뜨릴 수 있다. 인연이 있어도 움직여야 잡을 수 있다."
+    :pg>3?"인연이 여러 갈래로 들어오는 구조다. 선택지가 많은 건 좋지만, '더 좋은 사람이 있지 않을까'하는 비교심리가 결정을 방해한다. 결정적 시기에 단호하지 못하면 전부 다 놓칠 수 있다. 선택 후에는 뒤를 돌아보지 않는 연습이 필요하다."
+    :pg<0.3?"배우자 인연이 약한 편이다. 자연스러운 만남을 기다리면 시기를 놓치기 쉽고, 소개팅이나 모임 등 적극적 노력이 필요하다. 인연이 약하다는 건 '없다'가 아니라 '노력해야 온다'는 의미다. 30대에 특히 적극적으로 움직일 것."
+    :dc?"배우자 자리에 불안정한 에너지가 있다. 좋은 사람을 만나도 외부 변수(직장 이동, 가족 반대, 타이밍 문제 등)가 관계를 흔들기 쉽다. 감정에 휘둘리지 않고, 서로의 의지로 버티는 연습이 중요하다. 환경이 바뀌어도 마음이 변하지 않는 사람이 진짜 인연이다."
+    :"연애 인연은 보통 수준이다. 특별히 좋거나 나쁘지 않지만, 노력한 만큼의 결과가 온다. 타이밍을 잘 잡는 것이 핵심이고, 좋은 사람을 만났을 때 '지금 아니면 안 된다'는 결단력이 차이를 만든다.";
+
+  let h=Math.max(...dist)-Math.min(...dist)>4?`${EL[mxi]}의 기운이 과하고 ${EL[mni]}의 기운이 부족한 편중된 구조다. ${bp[mni]} 쪽을 특히 관리해야 하며, 과로하거나 스트레스가 쌓일 때 이 부위부터 신호가 온다. 균형 잡힌 식단과 규칙적 운동이 다른 사람보다 더 중요한 구조다. 건강검진을 미루지 말 것.`
+    :dc?"기운의 충돌이 있어서 스트레스성 질환에 주의해야 한다. 과로할 때 몸이 먼저 신호를 보내는 타입인데, 이 신호를 무시하는 습관이 위험하다. 수면의 질을 높이는 것이 건강 관리의 첫 번째 우선순위다. 주기적 검진과 스트레스 관리 루틴을 만들어 둘 것."
+    :"전반적으로 기운의 균형이 나쁘지 않은 편이다. 큰 건강 이슈보다는 생활습관에 따라 컨디션이 좌우된다. 규칙적 운동과 충분한 수면이 최고의 보험이고, 이 두 가지만 지켜도 체력이 오래 유지된다.";
+  return{career:c,wealth:w,romance:r,health:h};
+}
+
+// ===== 연애운 상세 분석 (플로우형) =====
+function genRomance(s,g,gods,dist,birthYear){
+  const ds=s.day.s,db=s.day.b,myEl=SE[ds],isY=SY[ds]===1;
+  const self=gods['비견']+gods['겁재']+gods['편인']+gods['정인'];
+  const off=gods['편관']+gods['정관'],out=gods['식신']+gods['상관'],wth=gods['편재']+gods['정재'];
+  const pg=g==='F'?off:wth;const pEl=g==='F'?(myEl+3)%5:(myEl+2)%5;
+  const ps=[s.year.b,s.month.b];if(s.hour.b>=0)ps.push(s.hour.b);
+  const dc=ps.some(b=>isClash(db,b)),hasPeach=ps.includes(PM[db]);
+  const R=[];
+
+  // ── 1. 나의 연애 DNA ──
+  const starts=[
+    isY?"사랑을 시작할 때 직접 다가가서 리드한다. 관심 있는 사람에게 시그널을 적극적으로 보내고, 반응이 오면 빠르게 관계를 진전시킨다. 기다리는 건 못 참는 성격이라, 밀당이 길어지면 그 자체로 흥미를 잃는다."
+        :"사랑은 분위기에서 시작한다. 은근히 신호를 보내면서 상대의 반응을 살피고, 자연스러운 흐름을 만드는 데 능하다. 직접 고백하기보다 상대가 먼저 말하게 만드는 기술이 있다.",
+    isY?"눈이 마주치는 순간 결정하는 타입이다. 고민하기 전에 이미 행동하고 있고, 좋아하면 세상에 티를 낸다. 빠른 시작이 장점이지만 불꽃이 빨리 타면 빨리 꺼질 수도 있다."
+        :"천천히 관찰하다가 확신이 서면 행동한다. 겉으로는 조용하지만 속으로는 이미 불이 붙어 있다. 상대를 관찰하는 능력이 천재적이어서, 작은 표정 변화까지 다 감지한다.",
+    isY?"상대가 안전하다는 확신이 들어야 움직인다. 좋아하는 감정보다 '이 관계가 현실적으로 가능한가'를 먼저 따진다. 신중함이 장점이지만 타이밍을 놓치는 경우도 잦다."
+        :"감정이 쌓여서 넘칠 때까지 기다린다. 본인도 모르게 빠져들어 있는 경우가 많고, 주변에서 먼저 눈치챈다. 상대에게 맞추다 보면 정작 자기 감정을 잃어버릴 때가 있다.",
+    isY?"확실한 시그널을 보내고, 반응이 없으면 깔끔하게 접는다. 미련 없이 다음으로 넘어가는 것처럼 보이지만, 속으로는 꽤 오래 복기한다."
+        :"오래 관찰하고, 상대의 품위와 센스를 확인한 뒤에야 마음을 연다. 아무에게나 시간을 투자하지 않는다. 눈이 높다는 말을 자주 듣지만, 본인 기준에선 당연한 거다.",
+    isY?"넓은 관계 속에서 자연스럽게 끌리는 사람을 발견한다. 지적 교감이 통하면 급속도로 가까워지지만, 그게 사랑인지 호기심인지 본인도 헷갈리는 경우가 많다."
+        :"이상형을 만나면 내면에서 강한 끌림이 생기지만, 행동으로 옮기는 건 느리다. 머릿속에서 이미 연애 시뮬레이션을 다 돌려보고, 현실과 비교한다."
+  ][myEl];
+
+  const attract=["자기 목표가 뚜렷하고 성장하는 사람에게 끌린다. 의존적이거나 방향 없이 떠도는 사람은 매력을 못 느낀다. 같이 있으면 '나도 더 잘해야지'라는 자극을 주는 상대가 이상형이다.",
+    "감정 표현이 풍부하고 에너지가 넘치는 사람에게 끌린다. 무표정하고 반응 없는 사람에게는 관심이 안 간다. 같이 있으면 심장이 뛰고, 지루하지 않은 사람을 원한다.",
+    "편안하고 안정적인 사람에게 끌린다. 화려함보다 한결같은 태도, 약속을 지키는 사람이 최고다. 변화보다 예측 가능한 안정감을 주는 상대에게 마음이 열린다.",
+    "강하고 결단력 있는 사람에게 끌린다. 우유부단하거나 눈치만 보는 사람은 답답해서 못 견딘다. 자기 의견이 명확하고 실행력 있는 사람이 매력적이다.",
+    "감수성이 풍부하고 깊은 대화가 되는 사람에게 끌린다. 표면적 대화만 하는 사람에겐 금방 지루해진다. 영혼이 통하는 느낌이 있어야 진짜 마음이 움직인다."
+  ][myEl];
+
+  // 집착/불안/회피/통제/헌신
+  let attach='';
+  if(gods['편관']>1.5||gods['정관']>1.5)attach="관계에서 <strong>통제 성향</strong>이 강하게 나타난다. 상대의 행동을 파악하고 싶어하고, 관계의 방향을 정하려 한다. 적절하면 안정감이지만, 상대가 숨이 막힌다고 느끼는 순간 관계가 무너진다.";
+  else if(gods['편인']>1.5)attach="관계에서 <strong>불안 성향</strong>이 두드러진다. 상대의 사소한 변화에 예민하게 반응하고, '나를 진짜 좋아하는 건 맞아?'라는 확인 욕구가 끊이지 않는다. 혼자 상상으로 불안을 키워서 없는 문제를 만들어내기도 한다.";
+  else if(gods['비견']+gods['겁재']>2.5)attach="관계에서 <strong>회피 성향</strong>이 강하다. 갈등이 생기면 대화보다 거리두기를 선택하고, 자기 영역을 침범당하면 극도로 예민해진다. 가까워질수록 오히려 밀어내는 패턴이 반복된다.";
+  else if(gods['상관']>1.5)attach="관계에서 <strong>집착 성향</strong>이 나타난다. 좋아하면 상대의 모든 걸 알고 싶고, 함께하는 시간이 많아야 안심한다. 상대에게 자유를 주는 것이 불안하고, 이것이 갈등의 시작점이 된다.";
+  else if(gods['식신']>1||gods['정재']>1||gods['정관']>1)attach="관계에서 <strong>헌신 성향</strong>이 강하다. 상대를 위해 자기를 희생하는 것도 마다하지 않는다. 아름다운 장점이지만, 보답받지 못한다고 느끼는 순간 서운함이 폭발한다.";
+  else attach="특정 성향에 크게 치우치지 않는 균형형이다. 상황에 따라 유연하게 대응하지만, 스트레스가 쌓이면 회피로 빠지기 쉽다.";
+
+  // 짧은 vs 긴
+  let style='';
+  if(out>2||gods['편재']>1.5||gods['편관']>1.5)style="연애 패턴은 <strong>짧고 강렬한 쪽</strong>에 가깝다. 불꽃처럼 시작해서 재가 되는 패턴이 익숙하고, 안정기에 들어서면 오히려 불안해진다. 진짜 사랑은 불꽃이 꺼진 후에 남는 온기인데, 그 온기를 견디는 연습이 필요하다.";
+  else if(gods['정인']>1||gods['정재']>1||gods['정관']>1)style="<strong>길고 안정적인 관계</strong>가 맞는 구조다. 짧은 연애는 에너지만 소모되고 남는 게 없다. 시간을 들여 깊이 있는 관계를 만들 때 가장 행복하다.";
+  else style="짧은 연애와 긴 연애 모두 가능하지만, 본인이 원하는 관계의 형태를 먼저 명확히 정하면 그에 맞는 사람이 온다.";
+
+  R.push({t:'나의 연애 DNA',txt:`${starts}<br><br>끌리는 유형은 명확하다. ${attract}<br><br>${attach} ${style}`});
+
+  // ── 2. 연애의 그림자 ──
+  let duration='';
+  if(out>2)duration="초반 화력은 최상급이지만 유지가 어려운 구조다. 표현력이 넘쳐서 시작은 화려하지만, 일상이 되면 새로운 자극을 찾게 된다. 관계의 '유통기한'이 짧아지기 쉽고, 본인은 '맞는 사람이 아니었어'라고 합리화하지만 실제로는 '지루함을 못 견디는 것'이 문제다.";
+  else if(self>3)duration="초반에 자기 페이스를 강하게 밀어붙여서, 상대가 따라오다 지치는 패턴이 있다. 관계 초기에는 매력적이지만, 시간이 갈수록 '이 사람 옆에 있으면 피곤해'라는 반응이 온다.";
+  else if(gods['편관']>1.5||gods['편재']>1.5)duration="현재 관계에 안정이 오면 밖에서 자극을 찾는 경향이 있다. 새로운 인연에 흔들리기 쉬운 구조라, 의식적으로 현재에 집중하지 않으면 관계가 반복적으로 짧아진다.";
+  else if(gods['정인']>1.5)duration="오래 가는 관계에 강하다. 한번 신뢰가 쌓이면 쉽게 놓지 않는다. 다만 관계가 이미 끝났는데도 억지로 유지하려는 경향이 있어서, 끝내야 할 때 끝내지 못하는 것이 더 큰 문제다.";
+  else duration="관계의 지속력은 상대에 따라 크게 달라지는 구조다. '서로의 일상이 맞느냐'가 관계 유지의 핵심이다.";
+
+  let fail=["같은 유형의 사람에게 반복적으로 끌리다 같은 이유로 이별한다. 성장하는 사람을 좋아하는데, 정작 자기 기준에 맞추려다 상대를 질리게 만든다. '나는 변하지 않는데 왜 매번 이별하지?'라는 질문의 답은 거울 속에 있다.",
+    "초반 불꽃에 취해 상대를 과대평가한다. 환상이 깨지면 급격히 식어버리고, '사람을 바꿀 수 있다'는 착각을 다른 사람에게 또 반복한다. 상대의 현재 모습이 아니라 '가능성'에 투자하는 습관이 위험하다.",
+    "불만을 말하지 않고 쌓다가 한꺼번에 폭발해서 관계가 한순간에 무너진다. 상대는 '갑자기 왜 이래?'라고 하지만, 본인에게는 갑자기가 아니다. '시간이 해결해주겠지'라는 회피가 패턴의 핵심이고, 이 습관을 바꾸지 않으면 평생 반복된다.",
+    "감정이 앞서서 논리를 무시한다. 주변에서 '그 사람 아닌 것 같아'라고 해도 안 듣다가, 이별 후에야 '그때 그 말이 맞았는데'를 깨닫는다. 같은 실수를 다른 사람에게 반복하면서도 자기는 다르다고 생각한다.",
+    "이상과 현실의 갭을 받아들이지 못한다. 머릿속 이상형이 너무 구체적이라, 현실의 사람에게 드라마 속 감정을 기대한다. 완벽한 사람을 찾다가 괜찮은 사람을 다 놓치는 패턴이 반복된다."
+  ][myEl];
+
+  let eye='';
+  if(gods['식신']>1.5||gods['정재']>1)eye="다행히 상대를 보는 눈은 비교적 정확한 편이다. 좋은 점과 나쁜 점을 구분할 수 있고, 감정에 취하면서도 현실적 판단을 어느 정도 유지한다. 다만 방심하면 조건에 눈이 가려질 수 있다.";
+  else if(gods['편인']>1.5||gods['상관']>1.5)eye="문제는 상대를 보는 눈에 환상이 강하다는 것이다. 상대의 실체보다 '내가 만들어낸 이미지'를 사랑하는 경향이 뚜렷하고, 연애 초기 3개월이 특히 위험하다. 냉정하게 관찰하는 기간을 반드시 두어야 한다.";
+  else if(self>3)eye="상대를 볼 때 자기 기준이 너무 강해서 '있는 그대로'를 보지 못한다. 내 기준에 맞는 부분만 보고, 안 맞는 부분은 무시했다가 나중에 폭탄으로 돌아온다.";
+  else eye="상대를 보는 눈은 대체로 괜찮은 편이지만, 외모나 첫인상에 현혹되는 순간이 있다. 조건보다 일상의 습관을 관찰하는 것이 핵심이다.";
+
+  R.push({t:'연애의 그림자 — 반복되는 패턴과 약점',txt:`${duration}<br><br>반복되는 실패 패턴을 직시해야 한다. ${fail}<br><br>${eye}`});
+
+  // ── 3. 상처와 이별 ──
+  let hurt=["내가 인정받지 못한다고 느낄 때 가장 크게 상처받는다. 상대가 나의 노력과 성장을 무시하면, 존재 자체가 부정당하는 기분이 든다. 특히 '그건 별거 아니야'라는 한마디가 치명적이다.",
+    "관심과 사랑이 식었다고 느끼는 순간이 가장 아프다. 상대의 무관심은 칼보다 아프고, '더 이상 특별하지 않다'는 느낌은 자존감을 바닥까지 떨어뜨린다.",
+    "신뢰가 깨지는 순간이 가장 큰 상처다. 배신, 거짓말, 약속 불이행 — 이 세 가지 중 하나만 걸려도 관계가 끝날 수 있다. 한번 깨진 신뢰는 어떤 말로도 복구되지 않는다.",
+    "내가 기대한 수준에 미치지 못한다고 느낄 때 상처받는다. '이 사람은 이렇게 해줄 줄 알았는데'라는 실망이 쌓이면, 사랑이 원망으로 바뀐다.",
+    "진심을 몰라줄 때 세상에서 가장 외롭다. 속마음을 다 줬는데 상대가 가볍게 넘기면, 나는 아무 의미 없는 존재라는 느낌이 온다."
+  ][myEl];
+
+  let breakup=["이별 후 겉으로는 담담하게 정리하지만 속으로 오래 곱씹는다. 바쁘게 일을 만들어서 잊으려 하지만, 혼자 있는 밤에 무너진다. 이별을 인정하기까지 시간이 걸리고, 그 사이 자존감이 흔들린다.",
+    "이별하면 감정이 한꺼번에 폭발한다. 울고, 화내고, 후회하고, 원망하는 단계를 짧은 시간에 거치다가 어느 순간 스위치가 꺼지듯 털어버린다. 회복은 빠르지만, 처리하지 못한 감정이 다음 연애에 그림자를 드리운다.",
+    "아무 일도 없었다는 듯 일상을 유지한다. 하지만 내면에서는 천천히 무너지고 있다. 감정을 꽁꽁 묶어두면 몸이 대신 아프거나, 몇 달 후 갑자기 주저앉는다.",
+    "이별 후 분석 모드에 들어간다. '왜 이별했나', '누구 잘못인가', '어디서 틀어졌나'를 끝없이 복기한다. 결론을 내려야 마음이 정리되는데, 그 결론이 나오지 않으면 다음 관계로 넘어가지 못한다.",
+    "이별하면 깊은 슬픔에 빠져서 세상이 무의미하게 느껴진다. 이별의 상실감이 삶 전체를 잠식하고, 일상이 손에서 놓인다. 모든 타입 중 회복이 가장 오래 걸린다."
+  ][myEl];
+
+  let impact='';
+  if(pg>2.5)impact="무엇보다 연애가 삶 전체를 지배하기 쉬운 구조라는 것을 알아야 한다. 연애가 잘되면 모든 게 잘 풀리고, 연애가 망하면 일도 건강도 같이 무너진다. 감정과 일상을 분리하는 훈련이 인생의 핵심 과제다.";
+  else if(pg<0.5)impact="연애가 삶에 미치는 영향은 상대적으로 적다. 일이나 자기 세계에 더 큰 에너지를 쓰는 구조라서, 연애가 없어도 크게 흔들리지 않는다. 다만 이것이 '냉정하다'는 오해를 부를 수 있다.";
+  else impact="연애가 삶에 적당한 영향을 미치는 구조다. 좋을 때 에너지를 받고, 힘들 때 흔들리지만 완전히 무너지지는 않는다.";
+
+  R.push({t:'상처와 이별 — 가장 아픈 순간',txt:`${hurt}<br><br>${breakup}<br><br>${impact}`});
+
+  // ── 4. 운명의 사람 vs 독이 되는 사람 ──
+  const good=PARTNER_TRAITS[pEl];
+  const avoid=["지나치게 의존적이고 목표 없이 떠도는 사람은 절대 피해야 한다. 당신의 에너지를 일방적으로 빨아먹고, 성장을 멈추게 만든다. '내가 이끌어줄 수 있다'는 생각은 착각이다.",
+    "감정이 없는 것처럼 행동하는 사람은 독이다. 표현하지 않고 반응하지 않는 상대는 당신을 미치게 만든다. '저 사람은 원래 그런 거야'라고 참지 말 것. 기본적 감정 교환이 안 되는 관계는 유지할 가치가 없다.",
+    "변화만 추구하고 안정을 무시하는 사람과는 오래 못 간다. 매일 새로운 자극만 찾는 상대에게 휘둘리면 당신의 기반이 무너진다. 당신에게 필요한 건 자극이 아니라 뿌리다.",
+    "우유부단하고 결정을 미루는 사람은 답답함이 분노로 변한다. 당신의 명확함과 정면으로 충돌하고, 결국 당신이 모든 결정을 떠안게 된다. 파트너가 아니라 짐이 된다.",
+    "현실만 따지고 감성이 없는 사람은 당신의 깊은 내면을 이해하지 못한다. 대화가 표면에서만 맴돌고, 정작 중요한 이야기를 나눌 수 없다. 오래 갈수록 외로워진다."
+  ][myEl];
+
+  R.push({t:'운명의 사람 vs 독이 되는 사람',txt:`진짜 잘 맞는 상대는 <strong>${good.traits.join(', ')}</strong> 유형이다. ${good.desc} 소통 방식은 ${good.comm}이 맞고, 생활 리듬은 ${good.rhythm}인 사람이 좋다.<br><br>반면, ${avoid}`});
+
+  // ── 5. 연애 타이밍 ──
+  let strongYears=[],weakYears=[];
+  for(let y=2027;y<=2036;y++){
+    const ys=((y-4)%10+10)%10,yb=((y-4)%12+12)%12;
+    if(SE[ys]===pEl||yb===PM[db])strongYears.push(`${y}년(만 ${y-birthYear}세)`);
+    if(isClash(db,yb))weakYears.push(`${y}년(만 ${y-birthYear}세)`);
+  }
+  let timingTxt=strongYears.length?`연애운이 강하게 들어오는 시기는 <strong>${strongYears.slice(0,3).join(', ')}</strong>이다. 이 시기에 적극적으로 움직이면 좋은 인연을 만날 확률이 높아진다. 자연스러운 만남이든 소개팅이든, 이 해에는 기회를 놓치지 말 것.`
+    :"가까운 시기에 특별히 강한 연애 에너지의 해는 보이지 않는다. 특정 시기를 기다리기보다 꾸준한 만남 활동이 오히려 효과적이다.";
+  timingTxt+="<br><br>";
+  timingTxt+=weakYears.length?`반면, <strong>${weakYears.slice(0,3).join(', ')}</strong>에는 관계가 틀어지기 쉽다. 이 시기에는 감정적 결정을 피하고, 기존 관계에 더 신경 써야 한다. 이 시기에 시작한 관계는 충동의 산물일 수 있으니, 반드시 냉각기를 두고 판단할 것.`
+    :"가까운 시기에 큰 충돌의 해는 없지만, 안심하고 방심하면 그게 가장 위험하다. 관계는 위기가 없어도 서서히 식을 수 있다.";
+
+  R.push({t:'연애 타이밍 — 언제 움직이고 언제 조심할까',txt:timingTxt});
+
+  return R;
+}
+
+const PARTNER_TRAITS=[
+{traits:["성장지향적","긍정적","계획적"],desc:"목표가 뚜렷하고 자기 발전에 진심인 사람.",comm:"계획을 공유하고 서로의 목표를 응원하는 방식",rhythm:"아침형이거나 규칙적 생활 리듬"},
+{traits:["열정적","표현력 좋은","활동적"],desc:"감정 표현이 확실하고 에너지가 넘치는 사람.",comm:"감정을 바로바로 표현하는 직접적 소통",rhythm:"외출과 활동을 즐기는 활동적 라이프"},
+{traits:["안정적","듬직한","포용력 있는"],desc:"큰 변화보다 일상의 편안함을 주는 사람.",comm:"말보다 행동으로 보여주는 묵묵한 소통",rhythm:"집에서 함께하는 안정적 리듬"},
+{traits:["명확한","결단력 있는","원칙적인"],desc:"기준이 뚜렷하고 말이 정확한 사람.",comm:"핵심만 전달하는 간결한 소통 방식",rhythm:"자기 루틴이 확실한 독립적 생활"},
+{traits:["감성적","유연한","지적인"],desc:"감수성이 풍부하고 상대 마음을 잘 읽는 사람.",comm:"감정에 공감하고 깊은 대화를 나누는 방식",rhythm:"자유롭고 유동적인 라이프스타일"}
+];
+
+// ===== 결혼운 상세 분석 =====
+function genMarriage(s,g,gods,dist,birthYear){
+  const ds=s.day.s,db=s.day.b,myEl=SE[ds],isY=SY[ds]===1;
+  const self=gods['비견']+gods['겁재']+gods['편인']+gods['정인'];
+  const out=gods['식신']+gods['상관'],wth=gods['편재']+gods['정재'];
+  const pg=g==='F'?gods['편관']+gods['정관']:wth;
+  const pEl=g==='F'?(myEl+3)%5:(myEl+2)%5;
+  const ps=[s.year.b,s.month.b];if(s.hour.b>=0)ps.push(s.hour.b);
+  const dc=ps.some(b=>isClash(db,b)),dh=ps.some(b=>isHarm(db,b));
+  const M=[];
+
+  // --- calculations (same logic as before) ---
+  let need='';
+  if(pg>1.5&&self>2)need="결혼을 하면 확실히 안정되는 구조다. 배우자의 존재가 삶의 중심축이 되어, 혼자일 때보다 모든 면에서 나아진다. 결혼이 선택이 아니라 거의 필수에 가깝다.";
+  else if(self>3.5)need="결혼 없이도 혼자 충분히 잘 사는 구조다. 결혼이 필수는 아니지만, 나이 들수록 외로움을 느끼는 순간이 올 수 있다. 선택의 문제지 필수는 아니다.";
+  else if(pg<0.5)need="결혼 인연 자체가 약한 편이라 강하게 원하지 않을 수 있다. 비혼이나 동거도 충분히 행복한 선택지이고, 결혼을 강요할 필요는 없다.";
+  else need="결혼은 해도 좋고 안 해도 되는 구조지만, 하면 생활의 안정감이 확실히 올라간다. 핵심은 '누구와'이지 '해야 하나 말아야 하나'가 아니다.";
+
+  let timing='';
+  if(out>2||gods['상관']>1.5)timing="늦게 결혼할수록 유리하다. 젊을 때는 자기 표현 욕구가 강해서 관계에 갈등이 잦고, 자유를 포기하기 어렵다. 30대 중반 이후 안정기에 들어서면 결혼 만족도가 크게 올라간다.";
+  else if(gods['정관']>1||gods['정재']>1)timing="적절한 시기에 결혼하는 게 좋다. 너무 미루면 기회를 놓치고, 너무 서두르면 준비 부족으로 부딪힌다. 20대 후반~30대 초반이 최적 타이밍이다.";
+  else if(self>3)timing="본인이 준비됐다고 느낄 때가 적기다. 남의 시간표에 맞출 필요 없다. 다만 '준비'를 핑계로 무한정 미루는 것은 회피일 수 있다.";
+  else timing="빠른 결혼이든 늦은 결혼이든, 시기보다 '누구와'가 더 중요한 구조다.";
+
+  let bestYears=[];
+  for(let y=2027;y<=2038;y++){const ys=((y-4)%10+10)%10,yb=((y-4)%12+12)%12;
+    if(SE[ys]===pEl||isHarm(db,yb))bestYears.push(`${y}년(만 ${y-birthYear}세)`);}
+
+  M.push({t:'결혼, 해야 할까',txt:`${need}<br><br>${timing}<br><br>`+(bestYears.length?`가장 유력한 결혼 시기는 <strong>${bestYears.slice(0,3).join(', ')}</strong> 전후다. 이 시기에 만난 인연이라면 진지하게 고려할 가치가 있다.`:"가까운 시기에 강한 결혼 에너지의 해가 보이지 않는다. 시기를 기다리기보다 의식적으로 만남을 늘릴 것.")});
+
+  // 배우자 성향 + 복
+  const spT=[
+    {look:"건강하고 활동적인 인상, 키가 크거나 체격이 좋은 편",per:"긍정적이고 성장지향, 자기 목표가 뚜렷하다",age:"동갑이거나 비슷한 나이",econ:"자수성가형이거나 커리어 성장 중"},
+    {look:"화사하고 눈에 띄는 외모, 표정이 풍부하다",per:"열정적이고 감정 표현이 풍부, 에너지가 넘친다",age:"연하이거나 동갑",econ:"자기 일에 열정적, 경제력은 성장 중"},
+    {look:"편안한 인상, 따뜻한 분위기",per:"안정적이고 한결같다, 약속을 잘 지킨다",age:"연상이거나 동갑",econ:"안정적 직장인 또는 실속형"},
+    {look:"단정하고 세련된 외모, 차가운 첫인상",per:"원칙적이고 기준이 명확하다, 자기 세계가 있다",age:"연상 또는 동갑",econ:"전문직이거나 안정적 경제력"},
+    {look:"감성적이고 부드러운 분위기, 지적인 인상",per:"감수성이 풍부하고 공감력이 높다",age:"나이차가 있거나 비전통적 만남",econ:"자유업, 예술/문화 관련"}
+  ][pEl];
+
+  let spFortune='';
+  if(pg>1&&pg<2.5&&!dc)spFortune="배우자복은 <strong>강한 편</strong>이다. 좋은 배우자를 만날 확률이 높고, 결혼 후 서로에게 긍정적 영향을 준다.";
+  else if(pg>2.5)spFortune="배우자 인연이 <strong>복잡한 편</strong>이다. 여러 인연이 겹쳐서 선택을 잘못하면 고생한다. 첫인상보다 일상의 습관을 봐야 한다.";
+  else if(pg<0.5)spFortune="배우자복이 <strong>약한 편</strong>이다. 좋은 배우자를 만나려면 본인이 먼저 성장해야 한다.";
+  else if(dc)spFortune="배우자복 자체는 있지만 <strong>유지가 어려운 구조</strong>다. 두 사람의 의지가 중요하다.";
+  else spFortune="배우자복은 <strong>보통 수준</strong>이다. 노력한 만큼의 결과가 온다.";
+
+  M.push({t:'미래 배우자의 모습',txt:`예상되는 배우자의 모습은 이렇다. 외형은 <strong>${spT.look}</strong>. 성격은 ${spT.per}. ${spT.age}일 가능성이 높고, 경제적으로는 ${spT.econ}일 가능성이 크다.<br><br>${spFortune}`});
+
+  // 결혼생활 분위기 + 변화 + 갈등
+  let mood='';
+  if(dh&&pg>1)mood="<strong>안정형 결혼생활</strong>이 예상된다. 배우자와 조화를 이루는 구조라 큰 갈등 없이 평탄한 편이다. 소소한 행복이 쌓이는 관계.";
+  else if(dc)mood="<strong>갈등형 결혼생활</strong>의 가능성이 있다. 배우자 자리에 불안정한 에너지가 있어서 크고 작은 충돌이 잦다. 서로 다른 점을 '문제'가 아니라 '차이'로 인정하는 게 핵심이다.";
+  else if(gods['식신']>1.5)mood="<strong>실속형 결혼생활</strong>이다. 화려하진 않지만 먹고사는 문제에 강하다. 같이 맛집 가고, 집 꾸미고, 소확행을 쌓는 일상.";
+  else if(gods['상관']>1.5)mood="<strong>감정소모형 결혼생활</strong>에 주의해야 한다. 서로에 대한 감정이 강해서 좋을 때는 최고지만, 갈등 시 에너지 소모가 크다.";
+  else mood="<strong>평균형 결혼생활</strong>이다. 큰 드라마 없이 무난하지만, 무난함이 지루함으로 바뀌지 않도록 주기적 이벤트가 필요하다.";
+
+  let afterM='결혼 후 <strong>좋아지는 분야</strong>는 ';
+  if(pg>1)afterM+="정서적 안정, 사회적 신뢰도, 생활의 규칙성이다.";
+  else afterM+="혼자 감당하던 것들을 나눌 수 있어 부담이 줄어든다는 점이다.";
+  afterM+=' 반면 <strong>무너질 수 있는 분야</strong>는 ';
+  if(self>3)afterM+="개인 시간과 자유의 축소다. 이것이 스트레스의 주 원인이 될 수 있다.";
+  else if(gods['상관']>1.5)afterM+="자기 표현의 창구가 줄어드는 것이다. 취미나 창작 활동을 반드시 유지할 것.";
+  else afterM+="경제적 부담 증가다. 결혼 전 재정 계획을 철저히 세울 것.";
+
+  const conflictPts=["성장 속도의 차이가 핵심 갈등 포인트다. 한쪽이 성장하는데 다른 쪽이 멈춰 있으면, 존경이 무시로 바뀐다.","감정 표현의 온도차가 갈등의 씨앗이다. 한쪽은 뜨겁고 다른 쪽은 차가우면, 서로 '나는 노력하는데 저 사람은 안 해'라고 느낀다.","생활습관과 가치관의 차이가 쌓인다. 돈 쓰는 방식, 청소, 식사 패턴 같은 사소한 마찰이 결국 큰 벽이 된다.","자유와 구속의 경계가 핵심이다. 개인 시간을 얼마나 허용할지, 이것이 풀리지 않으면 답이 없다.","이상과 현실의 갭이 문제다. 결혼 전 기대와 결혼 후 현실이 다를 때, 그 차이를 받아들이지 못하면 무너진다."][myEl];
+
+  M.push({t:'결혼생활의 풍경',txt:`${mood}<br><br>${afterM}<br><br>배우자와의 핵심 갈등 포인트: ${conflictPts}`});
+
+  // 위기 + 대안 + 자녀 + 현실변화
+  let crisis='';
+  if(dc)crisis="배우자 자리의 불안정 에너지 때문에 결혼 7년 전후, 그리고 중년기에 위기가 올 수 있다. 외부 유혹이나 큰 갈등이 생기기 쉬운 시기다. 미리 인식하고 대비하면 넘길 수 있지만, 방심하면 돌이킬 수 없는 선택을 하게 된다.";
+  else if(gods['상관']>2)crisis="말에서 비롯된 갈등이 위기를 만들 수 있다. 특히 결혼 초반 3년 이내에 소통 패턴을 잘 잡아야 한다. 이 시기를 넘기면 안정되지만, 이 시기에 쌓인 상처는 오래간다.";
+  else if(pg>3)crisis="외부 인연이 들어올 수 있는 구조라, 결혼 후에도 유혹에 흔들리는 시기가 온다. 그 순간의 선택이 결혼의 지속 여부를 결정한다.";
+  else crisis="큰 위기 요소는 보이지 않지만, 권태기(결혼 5~7년차)는 누구에게나 온다. 이 시기에 새로운 공동 프로젝트를 시작하면 좋다.";
+
+  let altM='';
+  if(self>3.5&&pg<0.5)altM="구조적으로 비혼이나 동거가 오히려 더 맞을 수 있다. 법적 결혼의 틀보다 자유로운 파트너십이 당신의 성향에 잘 맞는다.";
+  else if(pg>1&&!dc)altM="전통적 결혼이 잘 맞는 구조다. 법적·사회적 안정감이 관계에 긍정적 영향을 준다.";
+  else altM="결혼이든 동거든 형식보다 내용이 중요한 구조다.";
+
+  let children='';
+  if(gods['식신']>1.5)children="자녀운이 있는 편이다. 아이와의 관계가 좋고 양육에서 보람을 느끼지만, 아이에게 에너지를 쏟느라 배우자 관계가 소홀해질 수 있다.";
+  else if(gods['상관']>1.5)children="자녀가 개성이 강하고 자유로운 편이다. 틀에 맞추려 하면 충돌이 크다.";
+  else if(gods['편인']>1.5)children="양육 스트레스가 높을 수 있다. 아이에 대한 불안과 걱정이 과해지기 쉽다.";
+  else children="자녀운은 보통 수준이다. 큰 문제 없이 키울 수 있다.";
+
+  let realCh='';
+  if(gods['정재']>1||gods['정관']>1)realCh="결혼을 통해 사회적 안정과 경제적 기반이 올라갈 가능성이 높다.";
+  else if(gods['편재']>1.5)realCh="결혼 후 재정적 변동이 있을 수 있다. 배우자와의 공동 투자는 신중할 것.";
+  else realCh="결혼이 현실적 변화를 크게 만들지는 않지만, 생활의 안정감은 올라간다.";
+
+  M.push({t:'위기, 대안, 그리고 미래',txt:`${crisis}<br><br>${altM}<br><br>자녀에 관해서는 — ${children}<br><br>결혼이 가져올 현실적 변화: ${realCh}`});
+
+  return M;
+}
+
+// ===== 대운 추정 =====
+function estDaYun(s,gender,birthYear){
+  const forward=(SY[s.year.s]===1&&gender==='M')||(SY[s.year.s]===0&&gender==='F');
+  const startAge=5;const age2027=2027-birthYear;
+  const idx=Math.max(0,Math.floor((age2027-startAge)/10));
+  const dir=forward?1:-1;
+  return{s:((s.month.s+dir*(idx+1))%10+10)%10,b:((s.month.b+dir*(idx+1))%12+12)%12};
+}
+
+// ===== 도파민 지수 =====
+function calcDopa(s,g,gods,birthYear){
+  const ds=s.day.s,db=s.day.b,mb=s.month.b,yb=s.year.b;
+  // 2027 세운: 정미(丁未) stem=3, branch=7
+  const seS=3,seB=7;
+  // 대운 추정
+  const dy=estDaYun(s,g,birthYear);
+  let score=40;
+  // === 가산 (자극·변화 추구 ↑) ===
+  const yeokma=[2,8,5,11],dohwa=[0,6,3,9];
+  // 역마 in 세운/대운, 원국과 작용
+  if(yeokma.includes(seB)&&(yeokma.includes(yb)||yeokma.includes(db)))score+=12;
+  if(yeokma.includes(dy.b)&&(yeokma.includes(yb)||yeokma.includes(db)))score+=8;
+  // 도화 in 세운/대운
+  if(dohwa.includes(seB))score+=8;
+  if(dohwa.includes(dy.b))score+=6;
+  // 세운 천간/지지 십성 체크
+  const seSG=tg(ds,seS),seZG=tg(ds,HS[seB][0]);
+  if(seSG==='편관'||seSG==='상관')score+=10;
+  if(seZG==='편관'||seZG==='상관')score+=10;
+  if(seSG==='편재')score+=7;if(seZG==='편재')score+=5;
+  // 대운 천간/지지 십성
+  const dySG=tg(ds,dy.s),dyZG=tg(ds,HS[dy.b][0]);
+  if(dySG==='편관'||dySG==='상관')score+=7;
+  if(dyZG==='편관'||dyZG==='상관')score+=7;
+  if(dySG==='편재')score+=5;
+  // 세운 지지와 일지/월지 충
+  let clCnt=0;if(isClash(seB,db))clCnt++;if(isClash(seB,mb))clCnt++;
+  if(clCnt>=2)score+=18;else if(clCnt===1)score+=12;
+  // 화/목 과다
+  const dist=eDist(s);
+  if(dist[1]+(SE[seS]===1?1:0)+(BE[seB]===1?1:0)>=4)score+=6;
+  if(dist[0]+(SE[seS]===0?1:0)+(BE[seB]===0?1:0)>=4)score+=6;
+  // 식상 3+ and 세운에서 또
+  if(gods['식신']+gods['상관']>=3&&(seSG==='식신'||seSG==='상관'))score+=8;
+  // === 감산 (안정 추구 ↑) ===
+  if(seSG==='정인')score-=8;if(seSG==='정관')score-=8;
+  if(seZG==='정인')score-=6;if(seZG==='정관')score-=6;
+  if(dySG==='정인')score-=5;if(dySG==='정관')score-=5;
+  // 세운 지지와 원국 합
+  const allB=[s.year.b,s.month.b,s.day.b];if(s.hour.b>=0)allB.push(s.hour.b);
+  if(allB.some(b=>isHarm(seB,b)))score-=6;
+  // 토 3개 이상
+  if(dist[2]+(SE[seS]===2?1:0)+(BE[seB]===2?1:0)>=3)score-=5;
+  // 인성 강하고 세운에서도 인성
+  if(gods['편인']+gods['정인']>=3&&(seSG==='편인'||seSG==='정인'))score-=10;
+  return Math.max(0,Math.min(100,score));
+}
+function dopaLevel(v){
+  if(v>=80)return{label:'매우 위험!',cls:'dopa-critical',color:'#e8475c',
+    detail:`2027년, 당신의 자극 추구 에너지가 극도로 높다. 새로운 만남, 변화, 모험을 향한 충동이 매우 강해지는 시기다. 누군가에게 확 빠지거나, 현재 관계를 박차고 나가고 싶은 욕구가 치솟을 수 있다.<br><br><strong>경고:</strong> 이 시기에 내린 감정적 결정은 후회할 확률이 매우 높다. 새로운 만남이 '운명'처럼 느껴져도, 최소 6개월은 지켜봐야 한다. 지금 느끼는 설렘은 진짜 사랑이 아니라 도파민이 만든 환상일 수 있다.<br><br><strong>핵심:</strong> 큰 결정(고백, 이별, 동거, 결혼)을 이 시기에 하지 마라. 최소 가을까지 유보하고, 감정이 아닌 현실을 기준으로 판단할 것. 지금은 당신의 판단력을 믿지 않는 것이 가장 현명한 판단이다.`};
+  if(v>=60)return{label:'주의',cls:'dopa-danger',color:'#e88747',
+    detail:`새로운 자극에 대한 욕구가 평소보다 높아지는 시기다. 일상에 변화를 주고 싶고, 새로운 사람에게 눈이 가기 쉽다. 매력이 올라가는 동시에 판단력도 흐려진다.<br><br><strong>주의:</strong> '좋아하는 감정'과 '같이 살 수 있는 사람'은 전혀 다른 문제다. 마음이 급해질 때 한 박자 쉬어가는 게 이 시기의 핵심 전략이다. 현재 관계가 있다면 권태감이 들 수 있는데, 그것은 상대의 문제가 아니라 당신의 도파민이 요구하는 것일 수 있다.<br><br><strong>팁:</strong> 새로운 취미나 운동으로 자극 욕구를 해소하면, 관계에서의 충동적 행동을 줄일 수 있다.`};
+  if(v>=40)return{label:'보통',cls:'dopa-alert',color:'#e8b847',
+    detail:`감정적으로 안정과 자극 사이의 균형이 잡혀 있는 시기다. 큰 충동은 없지만, 간헐적으로 '뭔가 새로운 게 필요해'라는 생각이 들 수 있다.<br><br><strong>포인트:</strong> 기존 관계를 깊게 만들기 좋은 때다. 새 만남을 원한다면 적극적으로 나서야 하지만, 급하지 않다. 이 시기에 만나는 인연은 비교적 냉정한 판단 속에서 선택할 수 있어서 오히려 좋은 결과로 이어질 확률이 높다.<br><br><strong>팁:</strong> 첫 만남에서 '별로'라고 느껴도 세 번은 만나봐라. 이 시기에는 느리게 피어나는 감정이 진짜일 확률이 높다.`};
+  return{label:'안전',cls:'dopa-safe',color:'#4da64d',
+    detail:`자극 추구 에너지가 낮고, 감정적으로 가장 안정된 시기다. 충동적 결정을 할 가능성이 거의 없고, 현재에 만족하는 힘이 있다.<br><br><strong>포인트:</strong> 기존 관계가 있다면 가장 편안한 시기다. 새 만남은 자연스럽게 오기보다 의식적으로 만들어야 한다. 조급해하지 말고, 이 안정감을 즐기면서 다음 기회를 기다려도 좋다.<br><br><strong>참고:</strong> 안정이 지루함으로 느껴질 수도 있다. 하지만 이 시기에 자기 자신을 가꾸면, 도파민이 올라가는 시기에 훨씬 좋은 선택을 할 수 있다.`};
+}
+
+// ===== 순애/타이밍/월별/타임라인/궁합 (간결 유지) =====
+function calcSunae(s,g,gods){let v=60;const db=s.day.b,myEl=SE[s.day.s];const ps=[s.year.b,s.month.b];if(s.hour.b>=0)ps.push(s.hour.b);
+if(!ps.some(b=>isClash(db,b)))v+=12;else v-=10;const pG=g==='F'?['편관','정관']:['편재','정재'];const pc=gods[pG[0]]+gods[pG[1]];
+if(pc>0.3&&pc<=2)v+=15;if(pc>3)v-=12;if(pc<0.3)v+=5;if(myEl===2||myEl===3)v+=8;if(myEl===4)v-=5;if(myEl===1)v-=3;
+if(gods['비견']+gods['겁재']>3)v-=8;if(gods['상관']>1.5)v-=8;if(ps.includes(PM[db]))v-=5;if(gods['정인']>1)v+=5;return Math.max(15,Math.min(98,v))}
+
+function calcTiming(s,g,by){const ds=s.day.s,db=s.day.b,pEl=g==='F'?(SE[ds]+3)%5:(SE[ds]+2)%5;const m=[],d=[];
+for(let y=2026;y<=2038;y++){const ys=((y-4)%10+10)%10,yb=((y-4)%12+12)%12;
+if(SE[ys]===pEl)m.push({year:y,age:y-by,reason:`${EL[pEl]}의 기운이 강해져 새 인연이 들어오기 쉬운 해`});
+if(yb===PM[db]&&m.length<3)m.push({year:y,age:y-by,reason:"매력이 극대화되는 해"});
+if(isHarm(db,yb))d.push({year:y,age:y-by,reason:"배우자 자리와 조화를 이루는 해"});
+if(SE[ys]===(SE[ds]+4)%5&&d.length<3)d.push({year:y,age:y-by,reason:"내면의 힘이 단단해지는 해"});}
+return{meet:m.slice(0,3),decide:d.slice(0,3)}}
+
+function calcMonthly(s,g){const ds=s.day.s,db=s.day.b,pEl=g==='F'?(SE[ds]+3)%5:(SE[ds]+2)%5;
+// 2027년 정미(丁未) 월별 간지
+const ms=[{m:1,s:7,b:1},{m:2,s:8,b:2},{m:3,s:9,b:3},{m:4,s:0,b:4},{m:5,s:1,b:5},{m:6,s:2,b:6},{m:7,s:3,b:7},{m:8,s:4,b:8},{m:9,s:5,b:9},{m:10,s:6,b:10},{m:11,s:7,b:11},{m:12,s:8,b:0}];
+const descs={5:["운명적 만남 가능","강한 끌림의 달","인연의 문이 활짝"],4:["설레는 기운이 감도는 달","좋은 만남 기회","관계 진전의 시기"],3:["평온한 흐름의 달","기존 관계를 다지기 좋은 때","내면을 가다듬는 시기"],2:["에너지 충전하는 달","자기 자신에 집중","무리한 만남은 역효과"]};
+return ms.map(mo=>{let sc=50;const mEl=SE[mo.s];if(mEl===pEl)sc+=25;if((mEl+1)%5===pEl)sc+=15;if(isClash(db,mo.b))sc+=10;if(isHarm(db,mo.b))sc+=15;if(mo.b===PM[db])sc+=20;sc=Math.max(10,Math.min(100,sc));
+let lv=sc>=80?5:sc>=65?4:sc>=45?3:2;const cls=lv>=5?'hot':lv>=4?'warm':lv>=3?'cool':'cold';
+return{month:mo.m,level:lv,cls,desc:descs[lv][Math.floor(Math.random()*descs[lv].length)]}})}
+
+function calcTimeline(s,g,by){const ds=s.day.s,db=s.day.b,pEl=g==='F'?(SE[ds]+3)%5:(SE[ds]+2)%5;const pts=[];
+for(let age=20;age<=40;age+=2){const y=by+age,ys=((y-4)%10+10)%10,yb=((y-4)%12+12)%12;let sc=45;
+if(SE[ys]===pEl)sc+=25;if((SE[ys]+1)%5===pEl)sc+=12;if(isHarm(db,yb))sc+=18;if(isClash(db,yb))sc+=8;if(yb===PM[db])sc+=15;
+pts.push({age,year:y,score:Math.max(15,Math.min(98,sc))})}return pts}
+
+// 원진 관계
+const WONJIN=[[0,7],[1,6],[2,9],[3,8],[4,11],[5,10]];
+const isWonjin=(a,b)=>WONJIN.some(p=>(p[0]===a&&p[1]===b)||(p[0]===b&&p[1]===a));
+// 삼합
+const SAMHAP=[[8,0,4],[11,3,7],[2,6,10],[5,9,1]];
+const isSamhap=(a,b)=>SAMHAP.some(g=>g.includes(a)&&g.includes(b)&&a!==b);
+
+function calcRelData(s1,s2){
+  const ds1=s1.day.s,ds2=s2.day.s,db1=s1.day.b,db2=s2.day.b;
+  const yb1=s1.year.b,yb2=s2.year.b;
+  const e1=SE[ds1],e2=SE[ds2];
+  const diff12=((e2-e1)%5+5)%5;
+  const isSame=diff12===0;
+  const isProducing=diff12===1||diff12===4;
+  const isControlling=diff12===2||diff12===3;
+  const tg12=tg(ds1,ds2),tg21=tg(ds2,ds1);
+  const hasFO=['편재','정재','편관','정관'];
+  const hasFinOff=hasFO.includes(tg12)||hasFO.includes(tg21);
+  const hasPeer=['비견','겁재'].includes(tg12);
+  const hasOutput=['식신','상관'].includes(tg12)||['식신','상관'].includes(tg21);
+  const dist1=eDist(s1),dist2=eDist(s2);
+  const w1=dist1.indexOf(Math.min(...dist1)),w2=dist2.indexOf(Math.min(...dist2));
+  const complement=(dist2[w1]>2?1:0)+(dist1[w2]>2?1:0);
+  const b1s=[s1.year.b,s1.month.b,s1.day.b];if(s1.hour.b>=0)b1s.push(s1.hour.b);
+  const b2s=[s2.year.b,s2.month.b,s2.day.b];if(s2.hour.b>=0)b2s.push(s2.hour.b);
+  const p1=PM[db1],p2=PM[db2];
+  const hasDohwa=b2s.includes(p1)||b1s.includes(p2);
+  return{isSame,isProducing,isControlling,
+    dayHarm:isHarm(db1,db2),dayClash:isClash(db1,db2),dayWonjin:isWonjin(db1,db2),
+    yearHarm:isHarm(yb1,yb2),yearClash:isClash(yb1,yb2),yearSamhap:isSamhap(yb1,yb2),
+    yyHarmony:SY[ds1]!==SY[ds2],
+    tg12,tg21,hasFinOff,hasPeer,hasOutput,complement,hasDohwa,
+    isControlling,e1,e2,dist1,dist2};
+}
+
+function calcLoveCompat(rel){
+  let sc=50;
+  if(rel.isProducing)sc+=12;
+  if(rel.isSame)sc+=5;
+  if(rel.isControlling)sc-=3;
+  if(rel.dayHarm)sc+=18;
+  if(rel.dayClash)sc+=3; // 연애: 티격태격 끌림
+  if(rel.dayWonjin)sc-=8;
+  if(rel.yearHarm)sc+=8;
+  if(rel.yearSamhap)sc+=6;
+  if(rel.yearClash)sc-=6;
+  if(rel.yyHarmony)sc+=10;
+  if(rel.hasFinOff)sc+=10;
+  if(rel.hasDohwa)sc+=8;
+  sc+=rel.complement*4;
+  if(rel.isControlling&&!rel.isProducing)sc-=7; // 한쪽이 눌리는 관계
+  return Math.max(0,Math.min(100,sc));
+}
+
+function calcFriendCompat(rel){
+  let sc=50;
+  if(rel.isProducing)sc+=15;
+  if(rel.isSame)sc+=12;
+  if(rel.isControlling)sc-=8;
+  if(rel.dayHarm)sc+=12;
+  if(rel.dayClash)sc-=12; // 친구: 충은 순수 마찰
+  if(rel.dayWonjin)sc-=10;
+  if(rel.yearHarm)sc+=10;
+  if(rel.yearSamhap)sc+=8;
+  if(rel.yearClash)sc-=8;
+  if(rel.hasPeer)sc+=10;
+  if(rel.hasOutput)sc+=8;
+  sc+=rel.complement*5;
+  if(rel.isControlling&&!rel.isProducing)sc-=10;
+  return Math.max(0,Math.min(100,sc));
+}
+
+function genCompatText(rel, loveSc, friendSc, s1, s2){
+  const elN=['나무','불','흙','쇠','물'];
+
+  // 케미 분석
+  let chem='';
+  if(rel.isProducing)chem+=`두 사람은 ${elN[rel.e1]}와 ${elN[rel.e2]}의 관계로, 한쪽이 다른 쪽에게 자연스럽게 에너지를 주는 <strong>상생 구조</strong>다. 함께 있으면 서로가 더 나은 방향으로 성장할 수 있는 조합이다. 이 관계의 핵심 매력은 '도움을 주고받는 자연스러움'인데, 주의할 점은 항상 같은 방향으로만 에너지가 흐르면 한쪽이 소진될 수 있다는 것이다.`;
+  else if(rel.isSame)chem+=`두 사람은 같은 ${elN[rel.e1]}의 기운을 공유한다. 서로를 깊이 이해하고 '말 안 해도 통한다'는 안도감이 있지만, 너무 비슷해서 새로운 자극이 부족할 수 있다. 관계에 변화를 주려면 의식적으로 새로운 경험을 함께 해야 한다.`;
+  else chem+=`두 사람은 ${elN[rel.e1]}와 ${elN[rel.e2]}의 관계로, 서로를 <strong>자극하는 구조</strong>다. 편안하지만은 않은 이 긴장감이 두 사람 사이의 성장 동력이 될 수 있다. 다만 자극이 갈등으로 번지지 않으려면, '다름'을 공격이 아닌 배움으로 받아들이는 태도가 필요하다.`;
+
+  if(rel.yyHarmony)chem+=' 음양이 맞아서 서로의 다른 매력에 자연스럽게 끌린다. 한쪽이 밀면 한쪽이 받아주는 호흡이 있다.';
+  else chem+=' 같은 기질이라 대등하고 이해도가 높지만, 자연스러운 역할 분담이 안 될 수 있다.';
+
+  if(rel.dayHarm)chem+='<br><br>배우자 자리끼리 조화를 이루는 <strong>아주 좋은 조합</strong>이다. 함께하는 시간이 자연스럽고 편안하며, 서로의 존재 자체가 안정감을 준다. 이것은 의식적 노력 없이도 작동하는 드문 궁합 요소다.';
+  else if(rel.dayClash)chem+='<br><br>배우자 자리가 부딪히는 구조다. 처음엔 강하게 끌리지만 일상에서 부딪힘이 잦다. 서로의 다름을 인정하는 것이 이 관계의 생존 조건이다. 이 충돌을 극복하면 오히려 누구보다 단단한 관계가 된다.';
+  else if(rel.dayWonjin)chem+='<br><br>겉으로는 괜찮아 보이지만 속으로 미묘한 불편함이 쌓이기 쉬운 구조다. 작은 불만을 바로바로 풀어야 큰 갈등을 피할 수 있다. 이 관계에서 침묵은 해결이 아니라 폭탄의 도화선이다.';
+
+  if(rel.yearSamhap)chem+='<br><br>띠가 삼합 관계라 자연스러운 유대감이 있다. 처음 만났을 때 \'어디서 본 것 같은\' 편안함을 느끼기 쉽다.';
+  if(rel.yearHarm)chem+=' 띠끼리 육합이라 세대적 공감이 있고, 인생의 리듬이 비슷하다.';
+  if(rel.yearClash)chem+=' 다만 띠가 충이라 세대적 가치관 차이가 있을 수 있다. 서로의 시대적 배경을 이해하려는 노력이 필요하다.';
+
+  // 연애 분석 (확장)
+  let love='';
+  if(rel.hasFinOff){
+    love+="서로에게 <strong>'끌림의 에너지'</strong>가 작용하는 구조다. 단순한 호감을 넘어 '이 사람과 함께하고 싶다'는 본능적 끌림이 있다. 연인으로 발전하면 자연스러운 역할 분담이 생기고, 서로를 보완하는 관계가 된다.";
+    // Check which direction
+    const hasFO=['편재','정재','편관','정관'];
+    if(hasFO.includes(rel.tg12))love+=` 특히 둘째가 첫째에게 '마음이 가는' 에너지가 강하다.`;
+    if(hasFO.includes(rel.tg21))love+=` 첫째가 둘째에게 '끌리는' 에너지가 뚜렷하다.`;
+    if(hasFO.includes(rel.tg12)&&hasFO.includes(rel.tg21))love+=` 양방향으로 끌림이 있어서 서로가 서로를 원하는 관계다.`;
+  } else {
+    love+="연인 사이의 본능적 끌림 에너지가 강하게 작용하지는 않는다. 이것은 나쁜 신호가 아니다. 천천히 알아가면서 정이 쌓이는 관계에 가깝고, 한번 깊어지면 오히려 오래간다.";
+  }
+
+  if(rel.hasDohwa)love+="<br><br>두 사람 사이에 <strong>매력 에너지</strong>가 활성화되어 있다. 만남 자체에 설렘이 있고, 주변에서도 '잘 어울린다'고 느끼기 쉽다. 이 매력은 관계 초반에 특히 강하게 작용하지만, 시간이 지나면 의식적으로 유지해야 한다.";
+
+  if(rel.dayClash)love+="<br><br>일상에서 티격태격이 잦지만, 연애에서는 오히려 그것이 '화해의 설렘'이 된다. 싸우고 풀어지는 과정에서 감정이 깊어지는 관계다. 다만 싸움이 감정선을 넘으면 돌이킬 수 없으니, '이 말은 절대 안 한다'는 선을 미리 정해두는 것이 이 커플의 생존 전략이다.";
+  else if(rel.dayHarm)love+="<br><br>함께하는 시간이 자연스럽고 편안하다. 연인으로 발전하면 안정적이고 오래 갈 가능성이 높다. '드라마틱한 연애'보다 '일상이 행복한 연애'를 원한다면 최적의 조합이다.";
+
+  if(rel.complement>0)love+="<br><br>서로에게 부족한 기운을 채워주는 관계라, 함께 있을 때 '완전해지는 느낌'이 있다. 이것이 오래된 커플이 '이 사람이 아니면 안 돼'라고 느끼는 이유가 된다.";
+
+  if(rel.isControlling)love+="<br><br>⚠️ 한 쪽이 관계를 주도하고 다른 쪽이 맞추는 구조가 되기 쉽다. 초반에는 자연스럽지만, 시간이 지나면 맞추는 쪽에 불만이 쌓인다. 주기적으로 역할을 바꿔보는 것(데이트 계획, 결정권 등)이 균형을 유지하는 비결이다.";
+
+  if(loveSc>=70)love+="<br><br>전체적으로 연인으로서 <strong>좋은 조합</strong>이다. 이 정도의 궁합은 자연스럽게 잘 풀리는 경우가 많지만, '잘 맞으니까 괜찮겠지'라는 방심이 가장 큰 적이다. 좋은 궁합도 관리하지 않으면 무뎌진다.";
+  else if(loveSc>=50)love+="<br><br>연인 궁합이 나쁘지 않지만 자동으로 잘 되는 관계는 아니다. 서로의 다른 점을 '보완'으로 볼 수 있느냐가 이 관계의 성패를 결정한다.";
+  else love+="<br><br>연인 궁합 점수가 높지 않지만, 궁합이 전부는 아니다. 낮은 점수의 커플이 의식적으로 노력해서 오히려 더 단단한 관계를 만드는 경우도 많다. 다만 근본적 가치관이 다르면 일찍 확인하는 게 좋다.";
+
+  // 친구 분석 (확장)
+  let friend='';
+  if(rel.hasPeer){
+    friend+="<strong>대등한 관계</strong>로 서로를 존중할 수 있는 구조다. 한쪽이 위에 서거나 눌리지 않아서 오래 유지되는 우정이 가능하다. 같은 기운을 가지고 있어서 고민을 나눌 때 '그래, 나도 그래'라는 공감이 자주 오간다. 다만 비슷한 만큼 경쟁 구도가 생길 수 있으니, '비교하지 않기'가 이 우정의 핵심 규칙이다.";
+  } else if(rel.isProducing){
+    friend+="한쪽이 자연스럽게 도움을 주는 <strong>상생 우정</strong>이다. 서로에게 배울 것이 있는 건강한 관계이며, 함께 있으면 성장하는 느낌이 있다. 다만 도움의 방향이 항상 한쪽이면 '기브 앤 테이크'의 균형이 깨질 수 있다. 가끔은 역할을 바꿔보는 것이 좋다.";
+  } else if(rel.isControlling){
+    friend+="한쪽이 다른 쪽을 이끄는 구조라, <strong>멘토-멘티 관계</strong>에 가깝다. 배울 것이 있는 관계지만, 대등한 친구가 되려면 역할이 고정되지 않도록 의식적으로 노력해야 한다. 이끄는 쪽은 '가르치려 하지 않기', 따르는 쪽은 '의견을 분명히 말하기'가 중요하다.";
+  } else {
+    friend+="같은 기운이라 <strong>편하고 이해도가 높은 우정</strong>이다. 가만히 있어도 편한 사이가 될 수 있고, 서로에 대한 기대치가 맞아서 실망할 일이 적다.";
+  }
+
+  if(rel.hasOutput)friend+="<br><br>함께 있으면 대화가 끊이지 않고, 서로의 아이디어를 발전시키는 <strong>시너지</strong>가 있다. 같이 프로젝트를 하거나 취미를 공유하면 혼자 할 때보다 훨씬 좋은 결과가 나온다. '같이 뭔가 만드는 사이'가 이 우정의 최고 형태다.";
+
+  if(rel.dayClash)friend+="<br><br>친구로서는 의견 충돌이 잦을 수 있다. 같은 주제에 대해 정반대 입장을 취하는 경우가 많고, 이것이 건전한 토론이 되면 서로 성장하지만, 감정적으로 번지면 관계가 소모적으로 변한다. '우리는 원래 다르다'를 기본 전제로 깔아야 한다.";
+  else if(rel.dayHarm)friend+="<br><br>함께 있을 때 편안하고 자연스럽다. 약속을 잡는 것 자체가 부담이 없고, 오랜만에 만나도 어색하지 않은 사이가 된다. 이런 친구는 인생에서 흔치 않다.";
+
+  if(rel.yearSamhap)friend+=" 띠가 삼합이라 같은 팀이나 모임에서 시너지가 난다.";
+
+  if(rel.complement>0)friend+="<br><br>서로에게 부족한 기운을 채워주는 관계라, 한쪽이 약할 때 다른 쪽이 자연스럽게 보완해준다. '나 혼자는 못하는 것'을 이 친구와 함께하면 가능해지는 경험을 하게 된다.";
+
+  if(rel.isControlling)friend+="<br><br>⚠️ 한쪽이 항상 리드하는 구조가 굳어지면 친구가 아니라 '갑을 관계'가 된다. 술자리에서 누가 가게를 정하는지, 여행에서 누가 일정을 짜는지 — 이런 작은 것들에서 균형을 의식적으로 맞춰야 한다.";
+
+  if(friendSc>=70)friend+="<br><br>전체적으로 <strong>좋은 우정</strong>이 예상되는 조합이다. 이 관계를 오래 유지하려면 '당연하게 여기지 않기'가 핵심이다.";
+  else if(friendSc<50)friend+="<br><br>친구 궁합이 높지 않지만, 다름이 매력이 되는 관계도 있다. 같은 기준으로 살지 않아도 서로를 존중할 수 있으면 오히려 시야를 넓혀주는 소중한 친구가 된다.";
+
+  return{chem, love, friend};
+}
+
+function genElementCompare(dist1, dist2, name1, name2) {
+  const elNames=['나무','불','흙','쇠','물'];
+  const elEmoji=['🌿','🔥','🏔️','⚔️','💧'];
+  const reasons=[
+    ["계획과 성장을 주도","따라가는 역할","'저 사람은 내가 못하는 추진력이 있어'","'왜 나한테만 결정을 미루지? 좀 끌고 가줘'"],
+    ["감정 표현과 열정을 담당","받아주는 역할","'저 사람이 있으면 내 감정이 살아나'","'왜 항상 감정이 앞서고 지속이 없지?'"],
+    ["안정과 현실 관리를 맡음","자유를 누리는 역할","'저 사람이 있으면 마음이 놓여'","'왜 나만 현실적인 걱정을 하는 거야?'"],
+    ["결단과 정리를 담당","유연하게 따르는 역할","'저 사람의 깔끔한 결단력이 좋아'","'왜 항상 자기 기준대로만 하려고 하지?'"],
+    ["감성과 공감을 담당","현실적 해결을 하는 역할","'저 사람은 내 마음을 진짜 알아줘'","'왜 현실보다 감정에만 빠져있지?'"]
+  ];
+
+  // Bar visualization data
+  const maxVal = Math.max(...dist1, ...dist2, 1);
+  let barsHTML = '';
+  let analysisText = '';
+  let hasSignificantDiff = false;
+
+  for (let i = 0; i < 5; i++) {
+    const w1 = Math.round(dist1[i] / maxVal * 100);
+    const w2 = Math.round(dist2[i] / maxVal * 100);
+    barsHTML += `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <div style="width:36px;text-align:center;font-size:13px">${elEmoji[i]}</div>
+      <div style="flex:1;display:flex;gap:2px;align-items:center">
+        <div style="flex:1;display:flex;justify-content:flex-end"><div style="height:16px;border-radius:4px 0 0 4px;background:${['#6dbe6d','#e87c7c','#d4b06a','#a0a0b0','#6da8d4'][i]};width:${w1}%;min-width:2px;opacity:0.7"></div></div>
+        <div style="width:1px;height:20px;background:#ddd"></div>
+        <div style="flex:1"><div style="height:16px;border-radius:0 4px 4px 0;background:${['#6dbe6d','#e87c7c','#d4b06a','#a0a0b0','#6da8d4'][i]};width:${w2}%;min-width:2px;opacity:0.7"></div></div>
+      </div>
+    </div>`;
+
+    const diff = dist1[i] - dist2[i];
+    if (Math.abs(diff) > 1.5) {
+      hasSignificantDiff = true;
+      const more = diff > 0 ? name1 : name2;
+      const less = diff > 0 ? name2 : name1;
+      analysisText += `<strong>${elNames[i]}의 기운</strong>은 ${more}이 훨씬 많고 ${less}은 부족하다. 일상에서 ${more}이 ${reasons[i][0]}을 하고, ${less}은 ${reasons[i][1]}이 된다. 끌리는 이유: ${reasons[i][2]}. 답답한 이유: ${reasons[i][3]}<br><br>`;
+    }
+  }
+
+  if (!hasSignificantDiff) {
+    analysisText = "두 사람의 오행 분포가 비교적 비슷하다. 서로에게 큰 보완은 없지만, 같은 리듬으로 살아갈 수 있어 일상의 마찰이 적다. '비슷해서 편하다'가 이 관계의 핵심이다.";
+  }
+
+  const legendHTML = `<div style="display:flex;justify-content:space-between;font-size:11px;color:#999;margin-bottom:12px">
+    <span>← ${name1}(첫째)</span><span>${name2}(둘째) →</span></div>`;
+
+  return { barsHTML: legendHTML + barsHTML, analysisText };
+}
+
+// ===== 관계 타이밍 =====
+function genRelTiming(s1, s2, by1, by2) {
+  const db1=s1.day.b, db2=s2.day.b;
+  const ds1=s1.day.s, ds2=s2.day.s;
+  const pEl1=SE[ds1], pEl2=SE[ds2];
+  let good=[], caution=[];
+
+  for(let y=2027;y<=2032;y++){
+    const ys=((y-4)%10+10)%10, yb=((y-4)%12+12)%12;
+    const yEl=SE[ys];
+    const h1=isHarm(db1,yb), h2=isHarm(db2,yb);
+    const c1=isClash(db1,yb), c2=isClash(db2,yb);
+    const age1=y-by1, age2=y-by2;
+    const ageStr=`(${age1}세/${age2}세)`;
+
+    if(h1&&h2) good.push({y,ages:ageStr,reason:"두 사람 모두에게 안정적인 에너지가 흐른다. 대화나 여행, 중요한 결정에 여유가 있는 시기. 이 해에 함께 새로운 것을 시작하면 좋은 결과가 기대된다.",basis:`${y}년 지지가 두 사람의 배우자 자리와 모두 조화`});
+    else if(h1&&!c2) good.push({y,ages:ageStr,reason:"첫째에게 특히 좋은 에너지가 흐른다. 이 쪽이 관계를 리드하면 자연스럽게 좋은 방향으로 흘러간다.",basis:`${y}년 지지가 첫째 배우자 자리와 조화`});
+    else if(h2&&!c1) good.push({y,ages:ageStr,reason:"둘째에게 특히 좋은 에너지가 흐른다. 이 쪽의 제안이나 결정을 따르면 순조롭다.",basis:`${y}년 지지가 둘째 배우자 자리와 조화`});
+
+    if(c1&&c2) caution.push({y,ages:ageStr,reason:"두 사람 모두에게 변화의 바람이 강한 해. 감정적 충돌이 커질 수 있으니 중요한 결정은 이 시기를 피하는 것이 안전하다.",basis:`${y}년 지지가 두 사람의 배우자 자리와 모두 충돌`});
+    else if(c1) caution.push({y,ages:ageStr,reason:"첫째에게 변동이 큰 해. 이 쪽이 불안하거나 예민해질 수 있으니, 둘째가 기다려주는 태도가 필요하다.",basis:`${y}년 지지가 첫째 배우자 자리와 충돌`});
+    else if(c2) caution.push({y,ages:ageStr,reason:"둘째에게 변동이 큰 해. 이 쪽의 감정 기복을 이해하고, 첫째가 안정감을 줘야 하는 시기다.",basis:`${y}년 지지가 둘째 배우자 자리와 충돌`});
+  }
+
+  return {good:good.slice(0,3), caution:caution.slice(0,3)};
+}
+
+// ===== 종합 요약 =====
+function genSum(s,g,gods,dist){const ds=s.day.s,dom=dist.indexOf(Math.max(...dist)),wk=dist.indexOf(Math.min(...dist));
+const self=gods['비견']+gods['겁재']+gods['편인']+gods['정인'];
+let l=[`<strong>${EL[dom]}의 기운</strong>이 가장 강하고, <strong>${EL[wk]}의 기운</strong>이 부족한 구성이다.`];
+if(gods['식신']+gods['상관']>2)l.push("표현력과 창의성이 뛰어나서 자기만의 색깔이 뚜렷하다.");
+else if(gods['편관']+gods['정관']>2)l.push("책임감이 강하고 조직에서 인정받기 쉬운 구조다.");
+else if(gods['편재']+gods['정재']>2)l.push("현실 감각이 좋고 돈의 흐름을 읽는 감이 있다.");
+else l.push(SY[ds]?"주도적으로 밀고 나가는 추진력이 장점이다.":"상황에 맞게 유연하게 대응하는 힘이 있다.");
+if(self>4)l.push("<strong>치명적 약점:</strong> 자기 확신이 지나쳐 남의 말을 안 듣는다.");
+else if(self<1.5)l.push("<strong>치명적 약점:</strong> 결정의 순간에 흔들린다. 남의 의견에 좌우되기 쉽다.");
+else if(gods['상관']>1.5)l.push("<strong>치명적 약점:</strong> 입이 화를 부른다. 타이밍과 톤이 나쁘면 적을 만든다.");
+else if(dist[wk]<0.3)l.push(`<strong>치명적 약점:</strong> ${EL[wk]}의 기운이 거의 없어 그 영역이 인생의 빈 구멍이 된다.`);
+else l.push("<strong>치명적 약점:</strong> 편안함에 안주하는 경향이 있다.");
+return l.join(' ')}
+
+// ===== UI =====
+let GG={individual:'',c1:'',c2:''};
+function selG(el,g){el.parentElement.querySelectorAll('.gender-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');GG[g]=el.dataset.gender}
+function switchTab(t){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+document.getElementById('tab-individual').classList.toggle('hidden',t!=='individual');
+document.getElementById('tab-compat').classList.toggle('hidden',t!=='compat');
+document.querySelectorAll('.tab-btn')[t==='individual'?0:1].classList.add('active')}
+
+function analyze(){
+  const Y=+document.getElementById('year').value,M=+document.getElementById('month').value,D=+document.getElementById('day').value;
+  const nt=document.getElementById('notime').checked,ah=nt?-1:parseInt(document.getElementById('birthtime').value.split(':')[0]);
+  if(!Y||!M||!D||!GG.individual){alert('생년월일과 성별을 모두 입력해주세요.');return}
+  document.getElementById('input-section').style.display='none';
+  const ld=document.getElementById('loading');ld.classList.add('show');ld.style.display='';
+  setTimeout(()=>{ld.classList.remove('show');ld.style.display='none';
+  const s=calc(Y,M,D,ah),gods=gDist(s),dist=eDist(s),g=GG.individual;
+  render(s,gods,dist,Y,g);},1800)}
+
+function render(s,gods,dist,by,g){
+  const ds=s.day.s,db=s.day.b,myEl=SE[ds];
+  const scores=calcScores(s,g,gods,dist),sd=genSD(s,g,gods,dist);
+  const sunae=calcSunae(s,g,gods),dopa=calcDopa(s,g,gods,by),dl=dopaLevel(dopa);
+  const timing=calcTiming(s,g,by),monthly=calcMonthly(s,g),tl=calcTimeline(s,g,by);
+  const ck=getCK(ds),romance=genRomance(s,g,gods,dist,by),marriage=genMarriage(s,g,gods,dist,by);
+  const pNames=['시간','일','월','년'],pData=[s.hour,s.day,s.month,s.year];
+
+  const pillarH=pData.map((p,i)=>{
+    if(i===0&&p.s<0)return`<div class="pillar"><div class="label">${pNames[i]}</div><div class="top" style="color:#bbb">?</div><div class="bottom" style="color:#bbb">?</div></div>`;
+    return`<div class="pillar"><div class="label">${pNames[i]}</div><div class="top" style="border-left:3px solid ${EC[SE[p.s]]}">${EE[SE[p.s]]} ${EL[SE[p.s]]}</div><div class="bottom" style="border-left:3px solid ${EC[BE[p.b]]}">${EE[BE[p.b]]} ${EL[BE[p.b]]}</div></div>`}).join('');
+  const elH=dist.map((d,i)=>`<div class="el el-${['wood','fire','earth','metal','water'][i]}" style="flex:${Math.max(d,0.5)}">${EE[i]}${EL[i]}</div>`).join('');
+
+  // 순애
+  let sG,sD;if(sunae>=85){sG="순애보급";sD="한번 마음을 주면 쉽게 변하지 않는다.";}
+  else if(sunae>=70){sG="진심형";sD="한번 주면 진지하다. 깊이 있는 관계를 원한다.";}
+  else if(sunae>=55){sG="균형형";sD="헌신하지만 나도 챙길 줄 안다.";}
+  else if(sunae>=40){sG="자유연애형";sD="다양한 경험으로 사랑을 배우는 타입.";}
+  else{sG="탐험가형";sD="새로운 설렘에 약하다. 집중하려면 의식적 노력이 필요.";}
+
+  // 태그
+  const rT=[];if(gods['상관']>1.5)rT.push('표현력폭발');if(gods['정관']>1)rT.push('진지한연애파');
+  if(gods['편재']>1)rT.push('스릴추구형');if(gods['식신']>1.5)rT.push('감각적');
+  if(sunae>=75)rT.push('순정파');if(dopa>=70)rT.push('지금설레는중');if(!rT.length)rT.push('안정추구형');
+
+  // 월별
+  const hearts=['','','💔','🤍','💛','💗','❤️‍🔥'];
+  const mH=monthly.map(mo=>`<div class="month-card ${mo.cls}"><div class="month-num">${mo.month}월</div><div class="month-hearts">${hearts[mo.level].repeat(mo.level)}</div><div class="month-desc">${mo.desc}</div></div>`).join('');
+
+  // 타임라인
+  const mx=Math.max(...tl.map(t=>t.score)),ca=2026-by;
+  const tlH=tl.map(t=>{const h=Math.round(t.score/mx*150),cur=Math.abs(t.age-ca)<=1,c=t.score>=70?'#e87c9a':t.score>=50?'#e8b86d':'#6da8d4';
+  return`<div class="timeline-bar-wrap"><div class="timeline-value">${t.score}</div><div class="timeline-bar${cur?' current':''}" style="height:${h}px;background:${c}"></div><div class="timeline-label">${t.age}세</div></div>`}).join('');
+
+  // 타이밍
+  const mtH=timing.meet.map(t=>`<div class="timing-card meet"><div class="timing-year">${t.year}년</div><div class="timing-age">만 ${t.age}세</div><div class="timing-reason">${t.reason}</div></div>`).join('')||'<div class="timing-card meet"><div class="timing-reason">적극적으로 움직여야 한다.</div></div>';
+  const dtH=timing.decide.map(t=>`<div class="timing-card decide"><div class="timing-year">${t.year}년</div><div class="timing-age">만 ${t.age}세</div><div class="timing-reason">${t.reason}</div></div>`).join('')||'<div class="timing-card decide"><div class="timing-reason">충분히 관계를 쌓고 판단하자.</div></div>';
+
+  // 연애 분석 HTML
+  const romH=romance.map(r=>`<div class="sub-section"><h3>${r.t}</h3><div class="analysis-text">${r.txt}</div></div>`).join('');
+  const marH=marriage.map(m=>`<div class="sub-section"><h3>${m.t}</h3><div class="analysis-text">${m.txt}</div></div>`).join('');
+
+  // 갈등
+  const CP={0:["상대가 못 따라오면 재촉한다","내 의견이 무시당하면 벽을 쌓는다","성장 없는 관계에 불안이 다그침으로 나온다"],
+  1:["감정 폭발 후 후회한다","관심이 줄면 극적 행동으로 확인받으려 한다","질투심에 논리보다 감정으로 밀어붙인다"],
+  2:["불만을 쌓다 한꺼번에 터뜨린다","변화 제안에 거부한다","맞추다 내 감정을 잃어버린다"],
+  3:["옳고 그름을 따지다 감정을 무시한다","한번 실망하면 문을 빨리 닫는다","내 기준에 맞추려 강요한다"],
+  4:["감정을 말하지 않아 답답하게 한다","상처받으면 회피하고 연락을 끊는다","이상과 현실 차이에 흔들린다"]};
+  const CS={0:["'기다려줄게'를 연습한다","'네 속도도 괜찮아'를 인정한다","상대 답을 듣기 전에 내 답을 말하지 않는다"],
+  1:["화나면 10초 숨 쉬고 입을 연다","'확인받고 싶어서 그래'라고 솔직히","감정 일기로 패턴을 직접 본다"],
+  2:["서운하면 24시간 안에 한 문장이라도","'지금 이게 불편해'를 구체적으로","새 제안에 '일단 해보자'를 먼저"],
+  3:["'네 마음은 알겠어, 근데 나는...'으로 시작","실망이 올 때 하루를 둔다","'너는 어떻게 생각해?'를 붙인다"],
+  4:["'지금 내 기분은 이래'를 문자로라도","'시간이 필요해'라고 먼저 말한다","이상은 방향이지 목적지가 아님을 받아들인다"]};
+
+  const taglines=["관계에서 주도하는 리더형","조용히 깊게 사랑하는 타입","열정 올인 드라마틱 연애파","은근한 끌림의 감성파","묵직한 안정감의 동반자형","헌신형이지만 기대도 큰 타입","솔직 직진 쿨한 연애파","까다롭지만 한번 주면 올인","자유로운 영혼의 지적 연애파","이상주의 감성 로맨티스트"];
+  const conflicts=CP[myEl],solutions=CS[myEl];
+
+  const html=`
+<div class="card fade-up"><h2>🔮 나의 사주 구성</h2><div class="pillar-box">${pillarH}</div><div class="element-bar">${elH}</div><div class="analysis-text" style="margin-top:14px">${genSum(s,g,gods,dist)}</div></div>
+
+<div class="card fade-up"><h2>✨ 나의 치이카와 캐릭터</h2><div class="chiikawa-box">
+<img src="images/${ck.img}" class="chiikawa-img" onerror="this.style.display='none'">
+<div class="chiikawa-name">나는 ${ck.name}형!</div><div class="chiikawa-desc">${ck.desc}</div>
+<div style="margin-top:12px;font-size:13px;color:#555">${ck.love}</div>
+<div style="margin-top:8px;font-size:12px;color:#b89a7d">${ck.tag}</div></div></div>
+
+<div class="card fade-up"><h2>📊 항목별 점수</h2>
+<div class="score-item score-career"><div class="score-header"><span class="label">직업운</span><span class="value">${scores.career}점</span></div><div class="score-bar"><div class="score-fill" style="width:${scores.career}%"></div></div><div class="score-desc">${sd.career}</div></div>
+<div class="score-item score-wealth"><div class="score-header"><span class="label">재물운</span><span class="value">${scores.wealth}점</span></div><div class="score-bar"><div class="score-fill" style="width:${scores.wealth}%"></div></div><div class="score-desc">${sd.wealth}</div></div>
+<div class="score-item score-romance"><div class="score-header"><span class="label">연애·결혼운</span><span class="value">${scores.romance}점</span></div><div class="score-bar"><div class="score-fill" style="width:${scores.romance}%"></div></div><div class="score-desc">${sd.romance}</div></div>
+<div class="score-item score-health"><div class="score-header"><span class="label">건강운</span><span class="value">${scores.health}점</span></div><div class="score-bar"><div class="score-fill" style="width:${scores.health}%"></div></div><div class="score-desc">${sd.health}</div></div></div>
+
+<div class="card fade-up"><h2>💕 나의 순애 점수</h2><div class="sunae-box"><div class="sunae-score">${sunae}</div><div class="sunae-label">${sG}</div><div class="sunae-desc">${sD}</div></div></div>
+
+<div class="card fade-up"><h2>💘 연애운 심층 분석</h2>
+<div class="tag-list">${rT.map(t=>`<span class="tag pink">#${t}</span>`).join('')}</div>
+${romH}</div>
+
+<div class="card fade-up"><h2>💍 결혼운 심층 분석</h2>${marH}</div>
+
+<div class="card fade-up"><h2>📅 좋은 시기</h2>
+<h3 style="color:#d4607a">만나기 쉬운 때</h3><div class="timing-grid">${mtH}</div>
+<h3 style="color:#5a5ac9;margin-top:16px">결정하기 좋은 때</h3><div class="timing-grid">${dtH}</div></div>
+
+<div class="card fade-up"><h2>📆 2027년 월별 연애 운세</h2><div class="monthly-grid">${mH}</div></div>
+
+<div class="card fade-up"><h2>📈 연애운 흐름 (20~40세)</h2>
+<div class="timeline-chart">${tlH}</div>
+<div style="text-align:center;font-size:12px;color:#999;margin-top:8px">높을수록 연애 에너지 강한 시기 | 현재 나이 강조</div></div>
+
+<div class="card fade-up"><h2>⚡ 갈등 패턴 Top 3</h2>
+${conflicts.map((c,i)=>`<div class="conflict-item"><span class="conflict-num">${i+1}.</span>${c}</div>`).join('')}
+<h3 style="margin-top:16px;color:#4da64d">해결 문장</h3>
+${solutions.map(s=>`<div class="solution-item">"${s}"</div>`).join('')}</div>
+
+<div class="card fade-up"><h2>🧪 도파민 지수 (2027년)</h2>
+<div class="dopa-meter"><div class="dopa-value" style="color:${dl.color}">${dopa}</div>
+<div class="dopa-badge ${dl.cls}">${dl.label}</div></div>
+<div class="analysis-text" style="line-height:2">${dl.detail}</div>
+<div style="margin-top:16px;padding:12px;background:#f8f5f0;border-radius:8px;font-size:12px;color:#999;line-height:1.6">
+<strong>측정 기준:</strong> 2027년 세운(丁未)과 추정 대운의 에너지가 당신의 사주 원국과 어떻게 상호작용하는지를 분석합니다. ① 역마(변화·이동)의 활성화 ② 도화(매력·인연)의 촉발 ③ 자극적 에너지(편관·상관·편재)의 유입 ④ 안정 에너지(정인·정관)의 억제력 ⑤ 일지/월지 충돌로 인한 변동성을 종합하여 산출합니다.</div></div>
+
+<div class="card fade-up"><div class="share-card">
+<div style="font-size:12px;color:#b89a7d;letter-spacing:2px;margin-bottom:12px">MY SAJU LOVE DESTINY</div>
+<img src="images/${ck.img}" style="width:60px;height:60px;object-fit:contain" onerror="this.style.display='none'">
+<div style="font-size:18px;font-weight:700;margin:8px 0">${ck.name}형 — ${taglines[ds]}</div>
+<div class="share-stats"><div class="share-stat"><div class="num">${scores.romance}</div><div class="lbl">연애운</div></div>
+<div class="share-stat"><div class="num">${sunae}</div><div class="lbl">순애점수</div></div>
+<div class="share-stat"><div class="num">${dopa}</div><div class="lbl">도파민</div></div></div>
+<div style="font-size:13px;color:#888;font-style:italic">"${rT.slice(0,3).map(t=>'#'+t).join(' ')}"</div>
+<div style="font-size:11px;color:#bbb;margin-top:12px">2026.10.28</div></div>
+<p style="text-align:center;margin-top:12px;font-size:12px;color:#bbb">스크린샷으로 공유해보세요!</p></div>
+
+<div style="text-align:center;margin-top:24px;display:flex;gap:12px;justify-content:center">
+<button class="analyze-btn" style="max-width:180px;font-size:14px;padding:12px;background:linear-gradient(135deg,#7cb5e8,#5a8fc9)" onclick="shareIndividual()">📤 결과 공유하기</button>
+<button class="analyze-btn" style="max-width:180px;font-size:14px;padding:12px" onclick="resetI()">다시 분석하기</button>
+</div>`;
+
+  document.getElementById('result').innerHTML=html;
+  document.getElementById('result').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function resetI(){document.getElementById('result').style.display='none';document.getElementById('result').innerHTML='';document.getElementById('input-section').style.display=''}
+
+function analyzeCompat(){
+  const v=id=>+document.getElementById(id).value;
+  const y1=v('c1-year'),m1=v('c1-month'),d1=v('c1-day'),y2=v('c2-year'),m2=v('c2-month'),d2=v('c2-day');
+  const h1=document.getElementById('c1-notime').checked?-1:parseInt(document.getElementById('c1-time').value.split(':')[0]);
+  const h2=document.getElementById('c2-notime').checked?-1:parseInt(document.getElementById('c2-time').value.split(':')[0]);
+  if(!y1||!m1||!d1||!GG.c1||!y2||!m2||!d2||!GG.c2){alert('두 사람의 정보를 모두 입력해주세요.');return}
+  document.getElementById('compat-input').style.display='none';
+  const ld=document.getElementById('compat-loading');ld.classList.add('show');ld.style.display='';
+  setTimeout(()=>{
+    ld.classList.remove('show');ld.style.display='none';
+    const s1=calc(y1,m1,d1,h1),s2=calc(y2,m2,d2,h2);
+    const gods1=gDist(s1),gods2=gDist(s2);
+    const rel=calcRelData(s1,s2);
+    const loveSc=calcLoveCompat(rel),friendSc=calcFriendCompat(rel);
+    const texts=genCompatText(rel,loveSc,friendSc,s1,s2);
+    const ck1=getCK(s1.day.s),ck2=getCK(s2.day.s);
+    const elComp=genElementCompare(rel.dist1,rel.dist2,'첫째('+ck1.name+')','둘째('+ck2.name+')');
+    const relTime=genRelTiming(s1,s2,y1,y2);
+
+    // 도파민 텐션
+    const dopa1=calcDopa(s1,GG.c1,gods1,y1),dopa2=calcDopa(s2,GG.c2,gods2,y2);
+    const dopaDiff=Math.abs(dopa1-dopa2);
+    let tensionDesc='';
+    if(dopaDiff<10)tensionDesc="두 사람의 에너지 리듬이 거의 같다. 같은 속도로 관계를 즐길 수 있는 시기.";
+    else if(dopaDiff<25)tensionDesc="약간의 온도차가 있다. 한 쪽이 더 적극적이고 다른 쪽이 수동적이지만, 이 차이가 오히려 균형을 만든다.";
+    else if(dopaDiff<40)tensionDesc="한 명은 모험 모드, 한 명은 안정 모드다. 급한 쪽이 기다려주지 않으면 오해가 쌓인다.";
+    else tensionDesc="에너지 리듬이 크게 다르다. 한 쪽은 새로운 자극을 찾고, 다른 쪽은 쉬고 싶어한다. 이 시기에 서로의 속도를 이해하지 못하면 심각한 갈등으로 번질 수 있다.";
+
+    // 등급
+    const loveGr=loveSc>=85?"천생연분":loveSc>=70?"좋은 인연":loveSc>=50?"노력하면 좋은 관계":loveSc>=30?"서로 다른 결":"정반대 매력";
+    const friendGr=friendSc>=85?"소울메이트":friendSc>=70?"좋은 인연":friendSc>=50?"노력하면 좋은 관계":friendSc>=30?"서로 다른 결":"정반대 매력";
+
+    // 조언
+    let advice='';
+    const avg=(loveSc+friendSc)/2;
+    if(avg>=75)advice="두 사람은 연인으로든 친구로든 <strong>좋은 조합</strong>이다. 이런 궁합은 흔하지 않으니 만남 자체를 소중히 여길 것. 다만 좋은 궁합에 기대서 노력을 멈추면 안 된다. 좋은 관계는 좋은 궁합 위에 좋은 습관이 쌓일 때 완성된다.<br><br>이 관계를 오래 유지하려면: ① 서로를 '당연하게' 여기지 않기 ② 감사한 마음을 표현하기 ③ 각자의 시간을 존중하기. 이 세 가지만 지켜도 10년 후에도 '이 사람이 내 인생 최고의 인연'이라고 느낄 수 있다.";
+    else if(avg>=55)advice="기본적으로 괜찮은 조합이지만, 자동으로 잘 되는 관계는 아니다. 서로의 다른 점을 '문제'가 아니라 '재료'로 볼 수 있느냐가 이 관계의 성패를 결정한다.<br><br>구체적으로: ① 상대가 나와 다르게 행동할 때 '왜 저래?'가 아니라 '저 사람은 저런 식이구나'로 받아들이기 ② 불만이 생기면 24시간 안에 말하기 (쌓아두면 폭발한다) ③ 일주일에 한 번은 서로의 근황을 깊이 나누는 시간 갖기. 이 습관이 '노력하면 좋은 관계'를 '진짜 좋은 관계'로 만든다.";
+    else if(avg>=40)advice="쉽지 않은 궁합이지만, 궁합 점수가 낮다고 관계가 안 되는 건 아니다. 오히려 낮은 궁합의 관계가 더 의식적으로 소통하고 노력해서 단단해지는 경우도 많다.<br><br>이 관계에서 특히 중요한 것: ① 근본적 가치관(돈, 가족, 인생 목표)이 맞는지 초기에 확인할 것 ② 서로의 '지뢰'를 빨리 파악하고 밟지 않기 ③ 갈등이 생겼을 때 '이기려 하지 말고 이해하려 하기'. 궁합은 출발점이지 목적지가 아니다.";
+    else advice="매우 다른 에너지의 조합이다. 이해하는 데 상당한 노력이 필요하고, 그 노력을 기꺼이 할 의지가 <strong>양쪽 모두</strong>에게 있어야 한다.<br><br>'다르다'는 것이 '틀리다'가 아님을 깊이 받아들여야 한다. 이 관계가 주는 가장 큰 선물은 '나와 완전히 다른 시각'이다. 그것을 배움으로 받아들이면 인생에서 가장 성장시키는 관계가 될 수 있다. 다만, 서로를 바꾸려는 시도는 절대 하지 말 것 — 그것은 사랑이 아니라 폭력이다.";
+
+    const imgTag=(ck)=>`<img src="images/${ck.img}" style="width:50px;height:50px;object-fit:contain" onerror="this.style.display='none'">`;
+
+    const html=`
+<div class="card fade-up"><h2>💑 궁합 결과</h2>
+<div class="compat-pair">
+<div class="compat-person">${imgTag(ck1)}<div style="font-size:13px;color:#888;margin-top:4px">첫째 · ${ck1.name}형</div></div>
+<div style="font-size:28px">💕</div>
+<div class="compat-person">${imgTag(ck2)}<div style="font-size:13px;color:#888;margin-top:4px">둘째 · ${ck2.name}형</div></div>
+</div>
+<div class="compat-dual">
+<div class="compat-col love-col"><div class="col-icon">💕</div><div style="font-size:12px;font-weight:600;color:#d4607a">연애 궁합</div><div class="col-score">${loveSc}</div><div class="col-grade">${loveGr}</div></div>
+<div class="compat-col friend-col"><div class="col-icon">🤝</div><div style="font-size:12px;font-weight:600;color:#5a7ac9">친구 궁합</div><div class="col-score">${friendSc}</div><div class="col-grade">${friendGr}</div></div>
+</div></div>
+
+<div class="card fade-up"><h2>🧪 2027 텐션 차이</h2>
+<div class="tension-bar">
+<div class="tension-person"><div class="tp-score" style="color:${dopa1>=60?'#e88747':'#6da8d4'}">${dopa1}</div><div class="tp-label">첫째(${ck1.name})</div></div>
+<div class="tension-mid"><div class="tension-diff">차이 ${dopaDiff}</div><div class="tension-desc">${tensionDesc}</div></div>
+<div class="tension-person"><div class="tp-score" style="color:${dopa2>=60?'#e88747':'#6da8d4'}">${dopa2}</div><div class="tp-label">둘째(${ck2.name})</div></div>
+</div>
+<div style="font-size:12px;color:#bbb;text-align:center">도파민 지수: 높을수록 새로운 자극을 추구하는 시기</div></div>
+
+<div class="card fade-up"><h2>✨ 두 사람의 케미</h2>
+<div class="analysis-text">${texts.chem}</div></div>
+
+<div class="card fade-up"><h2>💕 연애로서의 이 관계</h2>
+<div class="analysis-text">${texts.love}</div></div>
+
+<div class="card fade-up"><h2>🤝 친구로서의 이 관계</h2>
+<div class="analysis-text">${texts.friend}</div></div>
+
+<div class="card fade-up"><h2>🌈 오행 보완 분석</h2>
+<div style="margin:12px 0">${elComp.barsHTML}</div>
+<div class="analysis-text">${elComp.analysisText}</div></div>
+
+<div class="card fade-up"><h2>📅 관계의 타이밍 (2027~2032)</h2>
+${relTime.good.length?'<h3 style="color:#4da64d">여유가 생기는 시기</h3>'+relTime.good.map(t=>`<div class="compat-good"><strong>${t.y}년</strong> ${t.ages}<br>${t.reason}<br><span style="font-size:11px;color:#999">근거: ${t.basis}</span></div>`).join(''):''}
+${relTime.caution.length?'<h3 style="color:#e88747;margin-top:12px">부담이 커질 수 있는 시기</h3>'+relTime.caution.map(t=>`<div class="compat-warn"><strong>${t.y}년</strong> ${t.ages}<br>${t.reason}<br><span style="font-size:11px;color:#999">근거: ${t.basis}</span></div>`).join(''):''}
+${!relTime.good.length&&!relTime.caution.length?'<div class="analysis-text">2027~2032년 사이에 특별히 강한 조화/충돌의 해는 보이지 않는다. 평탄한 흐름 속에서 두 사람의 의지가 관계를 결정한다.</div>':''}
+<div style="margin-top:12px;font-size:12px;color:#bbb">* 미래를 확정하는 것이 아니라, 날씨 예보처럼 가능성과 주의점을 참고하세요.</div></div>
+
+<div class="card fade-up"><h2>💡 이 관계를 위한 조언</h2>
+<div class="analysis-text">${advice}</div></div>
+
+<div style="text-align:center;margin-top:24px;display:flex;gap:12px;justify-content:center">
+<button class="analyze-btn" style="max-width:180px;font-size:14px;padding:12px;background:linear-gradient(135deg,#7cb5e8,#5a8fc9)" onclick="shareCompat()">📤 결과 공유하기</button>
+<button class="analyze-btn" style="max-width:180px;font-size:14px;padding:12px" onclick="resetC()">다시 분석하기</button>
+</div>`;
+
+    document.getElementById('compat-result').innerHTML=html;
+    document.getElementById('compat-result').style.display='block';
+    window.scrollTo({top:0,behavior:'smooth'});
+  },1800);
+}
+
+function resetC(){document.getElementById('compat-result').style.display='none';document.getElementById('compat-result').innerHTML='';document.getElementById('compat-input').style.display=''}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'){document.getElementById('tab-compat').classList.contains('hidden')?analyze():analyzeCompat()}});
+
+// ===== 공유 기능 =====
+function buildShareURL(params) {
+  // file:// 에서는 공유 불가 → GitHub Pages 배포 후 동작
+  const base = window.location.protocol === 'file:'
+    ? window.location.href.split('#')[0]
+    : window.location.origin + window.location.pathname;
+  return base + '#' + new URLSearchParams(params).toString();
+}
+
+function shareIndividual() {
+  const y=document.getElementById('year').value, m=document.getElementById('month').value, d=document.getElementById('day').value;
+  const nt=document.getElementById('notime').checked;
+  const h=nt?'-1':document.getElementById('birthtime').value.replace(':','');
+  const g=GG.individual;
+  doShare(buildShareURL({y,m,d,h,g}));
+}
+
+function shareCompat() {
+  const v=id=>document.getElementById(id).value;
+  doShare(buildShareURL({
+    c:1,
+    y1:v('c1-year'),m1:v('c1-month'),d1:v('c1-day'),
+    h1:document.getElementById('c1-notime').checked?'-1':v('c1-time').replace(':',''),
+    g1:GG.c1,
+    y2:v('c2-year'),m2:v('c2-month'),d2:v('c2-day'),
+    h2:document.getElementById('c2-notime').checked?'-1':v('c2-time').replace(':',''),
+    g2:GG.c2
+  }));
+}
+
+function doShare(url) {
+  // 모바일에서만 네이티브 공유 시도, 데스크톱은 항상 클립보드
+  const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
+  if (isMobile && navigator.share) {
+    navigator.share({title:'사주 연애 운명 분석', url}).catch(()=>{});
+    return;
+  }
+  // 클립보드 복사
+  const ta=document.createElement('textarea');
+  ta.value=url;ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');
+    const btn=document.activeElement;if(btn&&btn.tagName==='BUTTON'){const o=btn.textContent;btn.textContent='✅ 링크 복사 완료!';setTimeout(()=>btn.textContent=o,2000)}
+    else alert('링크가 복사되었습니다!');
+  }catch(e){prompt('이 링크를 복사하세요:',url)}
+  document.body.removeChild(ta);
+}
+
+// Auto-load from URL params
+window.addEventListener('load', () => {
+  const hash = window.location.hash.slice(1);
+  if (!hash) return;
+  const p = new URLSearchParams(hash);
+  if (p.has('c')) {
+    switchTab('compat');
+    document.getElementById('c1-year').value=p.get('y1')||'';
+    document.getElementById('c1-month').value=p.get('m1')||'';
+    document.getElementById('c1-day').value=p.get('d1')||'';
+    const h1=p.get('h1');
+    if(h1==='-1'){document.getElementById('c1-notime').checked=true;document.getElementById('c1-time').disabled=true;}
+    else if(h1){document.getElementById('c1-time').value=h1.slice(0,2)+':'+h1.slice(2);}
+    if(p.get('g1')){GG.c1=p.get('g1');document.querySelectorAll('#compat-input .gender-group')[0].querySelectorAll('.gender-btn').forEach(b=>{if(b.dataset.gender===p.get('g1'))b.classList.add('active');})}
+    document.getElementById('c2-year').value=p.get('y2')||'';
+    document.getElementById('c2-month').value=p.get('m2')||'';
+    document.getElementById('c2-day').value=p.get('d2')||'';
+    const h2=p.get('h2');
+    if(h2==='-1'){document.getElementById('c2-notime').checked=true;document.getElementById('c2-time').disabled=true;}
+    else if(h2){document.getElementById('c2-time').value=h2.slice(0,2)+':'+h2.slice(2);}
+    if(p.get('g2')){GG.c2=p.get('g2');document.querySelectorAll('#compat-input .gender-group')[1].querySelectorAll('.gender-btn').forEach(b=>{if(b.dataset.gender===p.get('g2'))b.classList.add('active');})}
+    setTimeout(analyzeCompat,300);
+  } else if (p.has('y')) {
+    document.getElementById('year').value=p.get('y')||'';
+    document.getElementById('month').value=p.get('m')||'';
+    document.getElementById('day').value=p.get('d')||'';
+    const h=p.get('h');
+    if(h==='-1'){document.getElementById('notime').checked=true;document.getElementById('birthtime').disabled=true;}
+    else if(h){document.getElementById('birthtime').value=h.slice(0,2)+':'+h.slice(2);}
+    if(p.get('g')){GG.individual=p.get('g');document.querySelectorAll('#input-section .gender-btn').forEach(b=>{if(b.dataset.gender===p.get('g'))b.classList.add('active');})}
+    setTimeout(analyze,300);
+  }
+});
+</script>
+</body>
+</html>
